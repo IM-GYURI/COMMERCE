@@ -1,6 +1,9 @@
 # COMMERCE Project
 셀러와 구매자 사이의 중개를 위한 간단한 e-commerce 서비스
 
+# 프로젝트 구조
+![project_structure](https://github.com/mingming-mentor/CodeReviewStudy/assets/80020777/5f5b13d5-99e3-437d-9f73-132010d5083d)
+
 # ERD
 ![ERD](https://github.com/IM-GYURI/COMMERCE/assets/80020777/736dad49-1254-4493-9004-3cdca934f4cc)
 
