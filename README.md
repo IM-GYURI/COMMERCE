@@ -148,6 +148,6 @@
 ### 결제
 - [ ] 포인트 충전
 - [ ] 결제 시 포인트 차감
+<br>
 
-
-##### [Notion 정리본 이동](https://www.notion.so/e-commerce-project-d41eca6aadb34316b3cc6cb516754cb4?pvs=4)
+#### [Notion 정리본 이동](https://www.notion.so/e-commerce-project-d41eca6aadb34316b3cc6cb516754cb4?pvs=4)
