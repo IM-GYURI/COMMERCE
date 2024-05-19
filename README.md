@@ -1,5 +1,5 @@
 # COMMERCE Project
-셀러와 구매자 사이의 중개를 위한 간단한 e-commerce 서비스
+셀러와 구매자 사이의 중개를 위한 e-commerce 서비스 백엔드
 
 # 프로젝트 구조
 ![project_structure](https://github.com/mingming-mentor/CodeReviewStudy/assets/80020777/5f5b13d5-99e3-437d-9f73-132010d5083d)
@@ -8,9 +8,12 @@
 ![ERD](https://github.com/IM-GYURI/COMMERCE/assets/80020777/736dad49-1254-4493-9004-3cdca934f4cc)
 
 # Tech Stack
-- Java
-- Spring Boot - Gradle
-- Jpa
+- Java 17
+- Spring Boot 3.2.5
+- Spring Web
+- Spring Security
+- Spring Validation
+- Spring Data JPA
 - MySql
 - Redis
 - JUnit
@@ -145,28 +148,3 @@
 ### 결제
 - [ ] 포인트 충전
 - [ ] 결제 시 포인트 차감
-
-## 기능 구현 순위
-- 회원 가입
-- 로그인
-- 회원 정보 조회
-- 회원 정보 수정
-- 회원 탈퇴
-- 상점 등록
-- 상점 조회
-- 상점 정보 수정
-- 상점 삭제
-- 상품 등록
-- 상품 조회
-- 상품 수정
-- 상품 삭제
-- 장바구니 등록
-- 장바구니 조회
-- 장바구니 수정
-- 장바구니 삭제
-- 결제 서비스
-- 리뷰 작성
-- 리뷰 조회
-- 리뷰 수정
-- 리뷰 삭제
-- 이메일 인증
