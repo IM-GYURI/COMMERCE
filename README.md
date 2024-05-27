@@ -14,7 +14,7 @@
 - Spring Security
 - Spring Validation
 - Spring Data JPA
-- MySql
+- MariaDB
 - Redis
 - JUnit
 - Mockito
