@@ -84,7 +84,7 @@ public class CustomerEntity extends BaseEntity implements UserDetails {
 
   @Override
   public String getPassword() {
-    return null;
+    return password;
   }
 
   @Override
