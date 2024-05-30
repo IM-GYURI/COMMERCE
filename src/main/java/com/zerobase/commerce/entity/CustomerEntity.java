@@ -3,10 +3,10 @@ package com.zerobase.commerce.entity;
 import static com.zerobase.commerce.type.Role.CUSTOMER;
 
 import com.zerobase.commerce.type.Role;
-import com.zerobase.commerce.util.RoleTypeConverter;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -59,7 +59,7 @@ public class CustomerEntity extends BaseEntity implements UserDetails {
   @ColumnDefault("0")
   private Long point;
 
-  @Convert(converter = RoleTypeConverter.class)
+  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private Role role;
 
