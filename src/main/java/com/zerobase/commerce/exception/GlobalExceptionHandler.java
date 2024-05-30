@@ -1,7 +1,6 @@
 package com.zerobase.commerce.exception;
 
 import static com.zerobase.commerce.exception.ErrorCode.INVALID_REQUEST;
-import static com.zerobase.commerce.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +28,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(DataIntegrityViolationException.class)
   public ResponseEntity<?> handleDataIntegrityViolationException(
       DataIntegrityViolationException e) {
-    return toResponse(RESOURCE_NOT_FOUND, RESOURCE_NOT_FOUND.getMessage());
+    return toResponse(INVALID_REQUEST, INVALID_REQUEST.getMessage());
   }
 
   private static ResponseEntity<ErrorResponse> toResponse(
