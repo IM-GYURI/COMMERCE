@@ -39,7 +39,7 @@ public class SecurityConfig {
             c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests((request) -> request.requestMatchers(
                     new AntPathRequestMatcher("/"),
-                    new AntPathRequestMatcher("/seller/signin"),
+                    new AntPathRequestMatcher("/seller/signup"),
                     new AntPathRequestMatcher("/seller/signin")
                 ).permitAll()
                 .anyRequest().authenticated()
