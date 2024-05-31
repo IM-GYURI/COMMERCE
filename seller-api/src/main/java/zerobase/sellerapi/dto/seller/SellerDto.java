@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import zerobase.common.type.Role;
 import zerobase.sellerapi.entity.SellerEntity;
-import zerobase.sellerapi.type.Role;
 
 @Getter
 @Builder
