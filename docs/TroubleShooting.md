@@ -27,3 +27,24 @@ Body : JSON - RAW
     return password;
   }
 ```
+
+### 주소를 한글로 입력 시 오류 발생
+
+⭐ 해결
+
+1. application.yml 내 spring-datasource-url에 UTF-8 설정 추가
+
+```    
+url: jdbc:mariadb://localhost:3306/commerce?characterEncoding=UTF-8
+```
+
+2. 해당 DB의 스키마를 UTF-8로 수정
+
+### Java file outside of source root
+
+IntelliJ에서 각 모듈 내의 Application이 실행되지 않는 오류 발생
+
+⭐ 해결
+
+1. File > Project Structure > Modeuls > 루트 디렉토리 클릭 > Mark as Source > OK
+2. 각 모듈 내의 build.gradle을 gradle 연동
