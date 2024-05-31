@@ -1,6 +1,6 @@
 package zerobase.sellerapi.service;
 
-import static zerobase.sellerapi.exception.ErrorCode.SELLER_ALREADY_EXISTS;
+import static zerobase.common.exception.ErrorCode.SELLER_ALREADY_EXISTS;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,13 +9,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import zerobase.common.exception.CustomException;
+import zerobase.common.util.KeyGenerator;
 import zerobase.sellerapi.dto.seller.SellerDto;
 import zerobase.sellerapi.dto.seller.SellerSignInDto;
 import zerobase.sellerapi.dto.seller.SellerSignUpDto;
 import zerobase.sellerapi.entity.SellerEntity;
-import zerobase.sellerapi.exception.CustomException;
 import zerobase.sellerapi.repository.SellerRepository;
-import zerobase.sellerapi.util.KeyGenerator;
 
 @Service
 @RequiredArgsConstructor
