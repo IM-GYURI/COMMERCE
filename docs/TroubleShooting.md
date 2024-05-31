@@ -48,3 +48,10 @@ IntelliJ에서 각 모듈 내의 Application이 실행되지 않는 오류 발�
 
 1. File > Project Structure > Modeuls > 루트 디렉토리 클릭 > Mark as Source > OK
 2. 각 모듈 내의 build.gradle을 gradle 연동
+
+### 멀티 모듈 Gradle이 build가 되지 않는 오류
+
+⭐ 해결
+
+1. Gradle 탭에서 루트 디렉토리인 commerce를 제외한 하위 디렉토리들 삭제
+2. customer-api와 seller-api의 build.gradle에 `implementation project(':common')` 추가 
