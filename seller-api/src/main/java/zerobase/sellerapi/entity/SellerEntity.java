@@ -1,6 +1,6 @@
 package zerobase.sellerapi.entity;
 
-import static zerobase.sellerapi.type.Role.SELLER;
+import static zerobase.common.type.Role.SELLER;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import zerobase.sellerapi.type.Role;
+import zerobase.common.type.Role;
 
 /**
  * 판매자 엔티티 : 아이디, 판매자 키, 이메일, 비밀번호, 이름, 전화번호, 주소, 역할
