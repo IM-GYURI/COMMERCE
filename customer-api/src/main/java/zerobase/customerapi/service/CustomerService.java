@@ -1,6 +1,6 @@
 package zerobase.customerapi.service;
 
-import static zerobase.customerapi.exception.ErrorCode.CUSTOMER_ALREADY_EXISTS;
+import static zerobase.common.exception.ErrorCode.CUSTOMER_ALREADY_EXISTS;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,13 +9,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import zerobase.common.exception.CustomException;
+import zerobase.common.util.KeyGenerator;
 import zerobase.customerapi.dto.customer.CustomerDto;
 import zerobase.customerapi.dto.customer.CustomerSignInDto;
 import zerobase.customerapi.dto.customer.CustomerSignUpDto;
 import zerobase.customerapi.entity.CustomerEntity;
-import zerobase.customerapi.exception.CustomException;
 import zerobase.customerapi.repository.CustomerRepository;
-import zerobase.customerapi.util.KeyGenerator;
 
 @Service
 @RequiredArgsConstructor
