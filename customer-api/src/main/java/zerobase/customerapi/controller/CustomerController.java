@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -107,5 +108,33 @@ public class CustomerController {
     CustomerDto updated = customerService.edit(editDto);
 
     return ResponseEntity.ok(updated);
+  }
+
+  @DeleteMapping("/{customerKey}")
+  public ResponseEntity<?> deleteCustomer(@PathVariable String customerKey,
+      @RequestHeader("Authorization") String token) {
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+    } else {
+      return ResponseEntity.status(403).body("Access Denied");
+    }
+
+    if (!tokenProvider.validateToken(token)) {
+      return ResponseEntity.status(403).body("Invalid Token");
+    }
+
+    Authentication authentication = tokenProvider.getAuthentication(token);
+    String email = authentication.getName();
+
+    CustomerDto customerDto = customerService.findByEmail(email);
+    String keyOfCustomer = customerDto.getCustomerKey();
+
+    if (!customerKey.equals(keyOfCustomer)) {
+      return ResponseEntity.status(403).body("Access Denied");
+    }
+
+    customerKey = customerService.delete(customerKey);
+
+    return ResponseEntity.ok("delete " + customerKey);
   }
 }
