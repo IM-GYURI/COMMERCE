@@ -3,7 +3,9 @@ package zerobase.common.exception;
 
 import static zerobase.common.exception.ErrorCode.INVALID_REQUEST;
 
+import java.security.SignatureException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,5 +38,10 @@ public class GlobalExceptionHandler {
       ErrorCode errorCode, String message) {
     return ResponseEntity.status(errorCode.getStatus())
         .body(new ErrorResponse(errorCode, message));
+  }
+
+  @ExceptionHandler(SignatureException.class)
+  public ResponseEntity<?> handleSignatureException(SignatureException e) {
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 유효하지 않습니다.");
   }
 }
