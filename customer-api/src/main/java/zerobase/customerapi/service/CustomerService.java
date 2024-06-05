@@ -15,6 +15,7 @@ import zerobase.common.util.KeyGenerator;
 import zerobase.customerapi.dto.customer.CustomerDto;
 import zerobase.customerapi.dto.customer.CustomerSignInDto;
 import zerobase.customerapi.dto.customer.CustomerSignUpDto;
+import zerobase.customerapi.dto.customer.EditDto;
 import zerobase.customerapi.entity.CustomerEntity;
 import zerobase.customerapi.repository.CustomerRepository;
 
@@ -65,5 +66,15 @@ public class CustomerService {
   public CustomerDto findByEmail(String email) {
     return CustomerDto.fromEntity(customerRepository.findByEmail(email)
         .orElseThrow(() -> new CustomException(CUSTOMER_NOT_FOUND)));
+  }
+
+  @Transactional
+  public CustomerDto edit(EditDto editDto) {
+    CustomerEntity customer = customerRepository.findByCustomerKey(editDto.getCustomerKey())
+        .orElseThrow(() -> new CustomException(CUSTOMER_NOT_FOUND));
+
+    customer.updateCustomer(editDto);
+
+    return CustomerDto.fromEntity(customer);
   }
 }
