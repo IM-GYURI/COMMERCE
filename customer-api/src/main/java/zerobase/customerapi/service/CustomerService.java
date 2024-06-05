@@ -1,6 +1,7 @@
 package zerobase.customerapi.service;
 
 import static zerobase.common.exception.ErrorCode.CUSTOMER_ALREADY_EXISTS;
+import static zerobase.common.exception.ErrorCode.CUSTOMER_NOT_FOUND;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -59,5 +60,10 @@ public class CustomerService {
         ));
 
     return CustomerDto.fromEntity((CustomerEntity) authentication.getPrincipal());
+  }
+
+  public CustomerDto findByEmail(String email) {
+    return CustomerDto.fromEntity(customerRepository.findByEmail(email)
+        .orElseThrow(() -> new CustomException(CUSTOMER_NOT_FOUND)));
   }
 }
