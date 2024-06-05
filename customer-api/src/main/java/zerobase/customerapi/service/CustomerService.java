@@ -33,7 +33,7 @@ public class CustomerService {
    */
   @Transactional
   public CustomerDto signUp(CustomerSignUpDto signUpDto) {
-    validateCustomerExists(signUpDto.getEmail());
+    validateCustomerExistsByEmail(signUpDto.getEmail());
 
     CustomerEntity savedCustomer = customerRepository.save(
         signUpDto.toEntity(
@@ -45,7 +45,7 @@ public class CustomerService {
     return CustomerDto.fromEntity(savedCustomer);
   }
 
-  private void validateCustomerExists(String email) {
+  private void validateCustomerExistsByEmail(String email) {
     if (customerRepository.existsByEmail(email)) {
       throw new CustomException(CUSTOMER_ALREADY_EXISTS);
     }
@@ -76,5 +76,20 @@ public class CustomerService {
     customer.updateCustomer(editDto);
 
     return CustomerDto.fromEntity(customer);
+  }
+
+  @Transactional
+  public String delete(String customerKey) {
+    validateCustomerExistsByCustomerKey(customerKey);
+
+    customerRepository.deleteByCustomerKey(customerKey);
+
+    return customerKey;
+  }
+
+  private void validateCustomerExistsByCustomerKey(String customerKey) {
+    if (!customerRepository.existsByCustomerKey(customerKey)) {
+      throw new CustomException(CUSTOMER_NOT_FOUND);
+    }
   }
 }
