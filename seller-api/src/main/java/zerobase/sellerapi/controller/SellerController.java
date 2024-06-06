@@ -82,7 +82,7 @@ public class SellerController {
   @PreAuthorize("hasRole('SELLER')")
   @PatchMapping("/{sellerKey}")
   public ResponseEntity<?> editSellerInformation(@PathVariable String sellerKey,
-      @RequestHeader("Authorization") String token, @RequestBody EditDto editDto) {
+      @RequestHeader("Authorization") String token, @RequestBody @Valid EditDto editDto) {
     try {
       SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
     } catch (CustomException e) {
