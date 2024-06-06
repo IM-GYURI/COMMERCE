@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -63,6 +64,7 @@ public class CustomerController {
    * @param token
    * @return
    */
+  @PreAuthorize("hasRole('CUSTOMER')")
   @GetMapping("/{customerKey}")
   public ResponseEntity<?> customerInformation(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token) {
@@ -83,6 +85,7 @@ public class CustomerController {
    * @param editDto
    * @return
    */
+  @PreAuthorize("hasRole('CUSTOMER')")
   @PatchMapping("/{customerKey}")
   public ResponseEntity<?> editCustomerInformation(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token, @RequestBody EditDto editDto) {
@@ -105,6 +108,7 @@ public class CustomerController {
    * @param token
    * @return
    */
+  @PreAuthorize("hasRole('CUSTOMER')")
   @DeleteMapping("/{customerKey}")
   public ResponseEntity<?> deleteCustomer(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token) {

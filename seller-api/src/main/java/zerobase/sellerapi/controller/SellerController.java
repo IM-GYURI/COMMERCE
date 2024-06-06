@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -58,6 +59,7 @@ public class SellerController {
    * @param token
    * @return
    */
+  @PreAuthorize("hasRole('SELLER')")
   @GetMapping("/{sellerKey}")
   public ResponseEntity<?> sellerInformation(@PathVariable String sellerKey,
       @RequestHeader("Authorization") String token) {
@@ -77,6 +79,7 @@ public class SellerController {
    * @param editDto
    * @return
    */
+  @PreAuthorize("hasRole('SELLER')")
   @PatchMapping("/{sellerKey}")
   public ResponseEntity<?> editSellerInformation(@PathVariable String sellerKey,
       @RequestHeader("Authorization") String token, @RequestBody EditDto editDto) {
@@ -98,6 +101,7 @@ public class SellerController {
    * @param token
    * @return
    */
+  @PreAuthorize("hasRole('SELLER')")
   @DeleteMapping("/{sellerKey}")
   public ResponseEntity<?> deleteSeller(@PathVariable String sellerKey,
       @RequestHeader("Authorization") String token) {
