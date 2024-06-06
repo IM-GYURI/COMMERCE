@@ -1,6 +1,8 @@
 package zerobase.customerapi.service;
 
-import static zerobase.customerapi.exception.ErrorCode.CUSTOMER_ALREADY_EXISTS;
+import static zerobase.common.exception.CommonErrorCode.INVALID_REQUEST;
+import static zerobase.customerapi.exception.CustomerErrorCode.CUSTOMER_ALREADY_EXISTS;
+import static zerobase.customerapi.exception.CustomerErrorCode.CUSTOMER_NOT_FOUND;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,13 +11,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import zerobase.common.util.KeyGenerator;
 import zerobase.customerapi.dto.customer.CustomerDto;
 import zerobase.customerapi.dto.customer.CustomerSignInDto;
 import zerobase.customerapi.dto.customer.CustomerSignUpDto;
+import zerobase.customerapi.dto.customer.EditDto;
 import zerobase.customerapi.entity.CustomerEntity;
-import zerobase.customerapi.exception.CustomException;
+import zerobase.customerapi.exception.CustomerCustomException;
 import zerobase.customerapi.repository.CustomerRepository;
-import zerobase.customerapi.util.KeyGenerator;
+import zerobase.customerapi.security.TokenProvider;
+
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +29,7 @@ public class CustomerService {
   private final CustomerRepository customerRepository;
   private final PasswordEncoder passwordEncoder;
   private final KeyGenerator keyGenerator;
+  private final TokenProvider tokenProvider;
   private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
   /**
@@ -31,7 +37,7 @@ public class CustomerService {
    */
   @Transactional
   public CustomerDto signUp(CustomerSignUpDto signUpDto) {
-    validateCustomerExists(signUpDto.getEmail());
+    validateCustomerExistsByEmail(signUpDto.getEmail());
 
     CustomerEntity savedCustomer = customerRepository.save(
         signUpDto.toEntity(
@@ -43,9 +49,9 @@ public class CustomerService {
     return CustomerDto.fromEntity(savedCustomer);
   }
 
-  private void validateCustomerExists(String email) {
+  private void validateCustomerExistsByEmail(String email) {
     if (customerRepository.existsByEmail(email)) {
-      throw new CustomException(CUSTOMER_ALREADY_EXISTS);
+      throw new CustomerCustomException(CUSTOMER_ALREADY_EXISTS);
     }
   }
 
@@ -59,5 +65,53 @@ public class CustomerService {
         ));
 
     return CustomerDto.fromEntity((CustomerEntity) authentication.getPrincipal());
+  }
+
+  public CustomerDto findByEmail(String email) {
+    return CustomerDto.fromEntity(customerRepository.findByEmail(email)
+        .orElseThrow(() -> new CustomerCustomException(CUSTOMER_NOT_FOUND)));
+  }
+
+  @Transactional
+  public CustomerDto edit(EditDto editDto) {
+    CustomerEntity customer = customerRepository.findByCustomerKey(editDto.getCustomerKey())
+        .orElseThrow(() -> new CustomerCustomException(CUSTOMER_NOT_FOUND));
+
+    customer.updateCustomer(editDto);
+
+    return CustomerDto.fromEntity(customer);
+  }
+
+  @Transactional
+  public String delete(String customerKey) {
+    validateCustomerExistsByCustomerKey(customerKey);
+
+    customerRepository.deleteByCustomerKey(customerKey);
+
+    return customerKey;
+  }
+
+  private void validateCustomerExistsByCustomerKey(String customerKey) {
+    if (!customerRepository.existsByCustomerKey(customerKey)) {
+      throw new CustomerCustomException(CUSTOMER_NOT_FOUND);
+    }
+  }
+
+  public CustomerDto validateAuthorizationAndGetSeller(String customerKey, String token) {
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+    }
+
+    Authentication authentication = tokenProvider.getAuthentication(token);
+    String email = authentication.getName();
+
+    CustomerDto customerDto = findByEmail(email);
+    String keyOfCustomer = customerDto.getCustomerKey();
+
+    if (!customerKey.equals(keyOfCustomer)) {
+      throw new CustomerCustomException(INVALID_REQUEST);
+    }
+
+    return customerDto;
   }
 }

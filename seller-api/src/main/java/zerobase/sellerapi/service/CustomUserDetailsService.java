@@ -1,6 +1,6 @@
 package zerobase.sellerapi.service;
 
-import static zerobase.sellerapi.exception.ErrorCode.SELLER_NOT_FOUND;
+import static zerobase.sellerapi.exception.SellerErrorCode.SELLER_NOT_FOUND;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

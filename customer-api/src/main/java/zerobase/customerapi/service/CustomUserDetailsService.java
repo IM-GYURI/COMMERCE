@@ -1,6 +1,6 @@
 package zerobase.customerapi.service;
 
-import static zerobase.customerapi.exception.ErrorCode.CUSTOMER_NOT_FOUND;
+import static zerobase.customerapi.exception.CustomerErrorCode.CUSTOMER_NOT_FOUND;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

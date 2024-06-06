@@ -1,1 +1,4 @@
 rootProject.name = 'commerce'
+include 'common'
+include 'customer-api'
+include 'seller-api'

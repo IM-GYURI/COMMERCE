@@ -14,10 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import zerobase.common.security.CustomAccessDeniedHandler;
+import zerobase.common.security.CustomAuthenticationEntryPoint;
 import zerobase.sellerapi.security.AuthenticationFilter;
-import zerobase.sellerapi.security.CustomAccessDeniedHandler;
-import zerobase.sellerapi.security.CustomAuthenticationEntryPoint;
 
 @RequiredArgsConstructor
 @Configuration
@@ -38,9 +37,9 @@ public class SecurityConfig {
         .sessionManagement(c ->
             c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests((request) -> request.requestMatchers(
-                    new AntPathRequestMatcher("/"),
-                    new AntPathRequestMatcher("/seller/signup"),
-                    new AntPathRequestMatcher("/seller/signin")
+                    "/",
+                    "/seller/signup",
+                    "/seller/signin"
                 ).permitAll()
                 .anyRequest().authenticated()
         )

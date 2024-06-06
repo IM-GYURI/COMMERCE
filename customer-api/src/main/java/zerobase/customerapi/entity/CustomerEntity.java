@@ -1,6 +1,6 @@
 package zerobase.customerapi.entity;
 
-import static zerobase.customerapi.type.Role.CUSTOMER;
+import static zerobase.common.type.Role.CUSTOMER;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +21,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import zerobase.customerapi.type.Role;
+import zerobase.common.type.Role;
+import zerobase.customerapi.dto.customer.EditDto;
 
 /**
  * 고객 엔티티 : 아이디, 고객 키, 이메일, 비밀번호, 이름, 전화번호, 주소, 생일, 포인트, 역할
@@ -111,5 +112,12 @@ public class CustomerEntity extends BaseEntity implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  public void updateCustomer(EditDto editDto) {
+    this.name = editDto.getName();
+    this.phone = editDto.getPhone();
+    this.address = editDto.getAddress();
+    this.birth = editDto.getBirth();
   }
 }
