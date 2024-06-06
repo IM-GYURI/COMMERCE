@@ -14,12 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import zerobase.common.exception.CustomException;
 import zerobase.customerapi.dto.customer.CustomerDto;
 import zerobase.customerapi.dto.customer.CustomerSignInDto;
 import zerobase.customerapi.dto.customer.CustomerSignUpDto;
 import zerobase.customerapi.dto.customer.EditDto;
-import zerobase.customerapi.repository.CustomerRepository;
+import zerobase.customerapi.exception.CustomerCustomException;
 import zerobase.customerapi.security.TokenProvider;
 import zerobase.customerapi.service.CustomerService;
 
@@ -32,7 +31,6 @@ import zerobase.customerapi.service.CustomerService;
 public class CustomerController {
 
   private final CustomerService customerService;
-  private final CustomerRepository customerRepository;
   private final TokenProvider tokenProvider;
 
   /**
@@ -72,8 +70,8 @@ public class CustomerController {
       CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
           token);
       return ResponseEntity.ok(customerDto);
-    } catch (CustomException e) {
-      return ResponseEntity.status(403).body("CUSTOMER NOT FOUND");
+    } catch (CustomerCustomException e) {
+      return ResponseEntity.status(403).body("IS NOT SAME CUSTOMER");
     }
   }
 
@@ -92,8 +90,8 @@ public class CustomerController {
     try {
       CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
           token);
-    } catch (CustomException e) {
-      return ResponseEntity.status(403).body("CUSTOMER NOT FOUND");
+    } catch (CustomerCustomException e) {
+      return ResponseEntity.status(403).body("IS NOT SAME CUSTOMER");
     }
 
     CustomerDto updated = customerService.edit(editDto);
@@ -115,8 +113,8 @@ public class CustomerController {
     try {
       CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
           token);
-    } catch (CustomException e) {
-      return ResponseEntity.status(403).body("CUSTOMER NOT FOUND");
+    } catch (CustomerCustomException e) {
+      return ResponseEntity.status(403).body("IS NOT SAME CUSTOMER");
     }
 
     customerKey = customerService.delete(customerKey);
