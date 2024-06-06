@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Collection;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -54,6 +55,26 @@ public class ProductEntity extends BaseEntity implements UserDetails {
 
   @Column
   private String description;
+
+  @Builder
+  public ProductEntity(String productKey, String name, Category category, Long price, Long stock,
+      String description) {
+    this.productKey = productKey;
+    this.name = name;
+    this.category = category;
+    this.price = price;
+    this.stock = stock;
+    this.description = description;
+  }
+
+  /**
+   * Seller 설정
+   *
+   * @return
+   */
+  public void setSeller(SellerEntity seller) {
+    this.sellerEntity = seller;
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
