@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import zerobase.common.exception.CustomException;
 import zerobase.customerapi.dto.customer.CustomerDto;
 import zerobase.customerapi.dto.customer.CustomerSignInDto;
 import zerobase.customerapi.dto.customer.CustomerSignUpDto;
@@ -66,27 +66,13 @@ public class CustomerController {
   @GetMapping("/{customerKey}")
   public ResponseEntity<?> customerInformation(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token) {
-    if (token != null && token.startsWith("Bearer ")) {
-      token = token.substring(7);
-    } else {
-      return ResponseEntity.status(403).body("Access Denied");
+    try {
+      CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
+          token);
+      return ResponseEntity.ok(customerDto);
+    } catch (CustomException e) {
+      return ResponseEntity.status(403).body("CUSTOMER NOT FOUND");
     }
-
-    if (!tokenProvider.validateToken(token)) {
-      return ResponseEntity.status(403).body("Invalid Token");
-    }
-
-    Authentication authentication = tokenProvider.getAuthentication(token);
-    String email = authentication.getName();
-
-    CustomerDto customerDto = customerService.findByEmail(email);
-    String keyOfCustomer = customerDto.getCustomerKey();
-
-    if (!customerKey.equals(keyOfCustomer)) {
-      return ResponseEntity.status(403).body("Access Denied");
-    }
-
-    return ResponseEntity.ok(customerDto);
   }
 
   /**
@@ -100,24 +86,11 @@ public class CustomerController {
   @PatchMapping("/{customerKey}")
   public ResponseEntity<?> editCustomerInformation(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token, @RequestBody EditDto editDto) {
-    if (token != null && token.startsWith("Bearer ")) {
-      token = token.substring(7);
-    } else {
-      return ResponseEntity.status(403).body("Access Denied");
-    }
-
-    if (!tokenProvider.validateToken(token)) {
-      return ResponseEntity.status(403).body("Invalid Token");
-    }
-
-    Authentication authentication = tokenProvider.getAuthentication(token);
-    String email = authentication.getName();
-
-    CustomerDto customerDto = customerService.findByEmail(email);
-    String keyOfCustomer = customerDto.getCustomerKey();
-
-    if (!customerKey.equals(keyOfCustomer)) {
-      return ResponseEntity.status(403).body("Access Denied");
+    try {
+      CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
+          token);
+    } catch (CustomException e) {
+      return ResponseEntity.status(403).body("CUSTOMER NOT FOUND");
     }
 
     CustomerDto updated = customerService.edit(editDto);
@@ -135,24 +108,11 @@ public class CustomerController {
   @DeleteMapping("/{customerKey}")
   public ResponseEntity<?> deleteCustomer(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token) {
-    if (token != null && token.startsWith("Bearer ")) {
-      token = token.substring(7);
-    } else {
-      return ResponseEntity.status(403).body("Access Denied");
-    }
-
-    if (!tokenProvider.validateToken(token)) {
-      return ResponseEntity.status(403).body("Invalid Token");
-    }
-
-    Authentication authentication = tokenProvider.getAuthentication(token);
-    String email = authentication.getName();
-
-    CustomerDto customerDto = customerService.findByEmail(email);
-    String keyOfCustomer = customerDto.getCustomerKey();
-
-    if (!customerKey.equals(keyOfCustomer)) {
-      return ResponseEntity.status(403).body("Access Denied");
+    try {
+      CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
+          token);
+    } catch (CustomException e) {
+      return ResponseEntity.status(403).body("CUSTOMER NOT FOUND");
     }
 
     customerKey = customerService.delete(customerKey);

@@ -2,6 +2,7 @@ package zerobase.customerapi.service;
 
 import static zerobase.common.exception.ErrorCode.CUSTOMER_ALREADY_EXISTS;
 import static zerobase.common.exception.ErrorCode.CUSTOMER_NOT_FOUND;
+import static zerobase.common.exception.ErrorCode.INVALID_REQUEST;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import zerobase.customerapi.dto.customer.CustomerSignUpDto;
 import zerobase.customerapi.dto.customer.EditDto;
 import zerobase.customerapi.entity.CustomerEntity;
 import zerobase.customerapi.repository.CustomerRepository;
+import zerobase.customerapi.security.TokenProvider;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ public class CustomerService {
   private final CustomerRepository customerRepository;
   private final PasswordEncoder passwordEncoder;
   private final KeyGenerator keyGenerator;
+  private final TokenProvider tokenProvider;
   private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
   /**
@@ -91,5 +94,23 @@ public class CustomerService {
     if (!customerRepository.existsByCustomerKey(customerKey)) {
       throw new CustomException(CUSTOMER_NOT_FOUND);
     }
+  }
+
+  public CustomerDto validateAuthorizationAndGetSeller(String customerKey, String token) {
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+    }
+
+    Authentication authentication = tokenProvider.getAuthentication(token);
+    String email = authentication.getName();
+
+    CustomerDto customerDto = findByEmail(email);
+    String keyOfCustomer = customerDto.getCustomerKey();
+
+    if (!customerKey.equals(keyOfCustomer)) {
+      throw new CustomException(INVALID_REQUEST);
+    }
+
+    return customerDto;
   }
 }
