@@ -74,4 +74,13 @@ public class ProductService {
 
     return ProductDto.fromEntity(product);
   }
+
+  @Transactional
+  public String delete(String productKey, String token) {
+    validateAuthorizationAndGetSeller(productKey, token);
+
+    productRepository.deleteByProductKey(productKey);
+
+    return productKey;
+  }
 }
