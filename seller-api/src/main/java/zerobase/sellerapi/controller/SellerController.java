@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import zerobase.common.exception.CustomException;
 import zerobase.sellerapi.dto.seller.EditDto;
 import zerobase.sellerapi.dto.seller.SellerDto;
 import zerobase.sellerapi.dto.seller.SellerSignInDto;
 import zerobase.sellerapi.dto.seller.SellerSignUpDto;
+import zerobase.sellerapi.exception.SellerCustomException;
 import zerobase.sellerapi.security.TokenProvider;
 import zerobase.sellerapi.service.SellerService;
 
@@ -66,7 +66,7 @@ public class SellerController {
     try {
       SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
       return ResponseEntity.ok(sellerDto);
-    } catch (CustomException e) {
+    } catch (SellerCustomException e) {
       return ResponseEntity.status(403).body("IS NOT SAME SELLER");
     }
   }
@@ -85,7 +85,7 @@ public class SellerController {
       @RequestHeader("Authorization") String token, @RequestBody @Valid EditDto editDto) {
     try {
       SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
-    } catch (CustomException e) {
+    } catch (SellerCustomException e) {
       return ResponseEntity.status(403).body("IS NOT SAME SELLER");
     }
 
@@ -107,7 +107,7 @@ public class SellerController {
       @RequestHeader("Authorization") String token) {
     try {
       SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
-    } catch (CustomException e) {
+    } catch (SellerCustomException e) {
       return ResponseEntity.status(403).body("IS NOT SAME SELLER");
     }
 
