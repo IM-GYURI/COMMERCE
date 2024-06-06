@@ -12,11 +12,14 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
   // Customer
   CUSTOMER_ALREADY_EXISTS(BAD_REQUEST, "이미 존재하는 고객입니다."),
-  CUSTOMER_NOT_FOUND(NOT_FOUND, "고객을 찾을 수 없습니다"),
+  CUSTOMER_NOT_FOUND(NOT_FOUND, "고객을 찾을 수 없습니다."),
 
-  //Seller
+  // Seller
   SELLER_ALREADY_EXISTS(BAD_REQUEST, "이미 존재하는 판매자입니다."),
-  SELLER_NOT_FOUND(NOT_FOUND, "판매자를 찾을 수 없습니다"),
+  SELLER_NOT_FOUND(NOT_FOUND, "판매자를 찾을 수 없습니다."),
+
+  // Product
+  PRODUCT_NOT_FOUND(NOT_FOUND, "상품을 찾을 수 없습니다,"),
 
   // Global
   RESOURCE_NOT_FOUND(NOT_FOUND, "요청한 자원을 찾을 수 없습니다."),
