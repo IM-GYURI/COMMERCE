@@ -1,7 +1,6 @@
 package zerobase.common.exception;
 
-
-import static zerobase.common.exception.ErrorCode.INVALID_REQUEST;
+import static zerobase.common.exception.CommonErrorCode.INVALID_REQUEST;
 
 import java.security.SignatureException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,8 +13,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler(CustomException.class)
-  public ResponseEntity<?> handleCustomException(CustomException e) {
+  @ExceptionHandler(CommonCustomException.class)
+  public ResponseEntity<?> handleCustomException(CommonCustomException e) {
     return toResponse(e.getErrorCode(), e.getMessage());
   }
 
