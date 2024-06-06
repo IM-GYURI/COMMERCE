@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import zerobase.sellerapi.dto.product.EditDto;
 import zerobase.sellerapi.type.Category;
 
 /**
@@ -74,6 +75,14 @@ public class ProductEntity extends BaseEntity implements UserDetails {
    */
   public void setSeller(SellerEntity seller) {
     this.sellerEntity = seller;
+  }
+
+  public void updateProduct(EditDto editDto) {
+    this.name = editDto.getName();
+    this.category = editDto.getCategory();
+    this.price = editDto.getPrice();
+    this.stock = editDto.getStock();
+    this.description = editDto.getDescription();
   }
 
   @Override
