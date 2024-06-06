@@ -113,4 +113,9 @@ public class SellerService {
 
     return sellerDto;
   }
+
+  public SellerEntity findBySellerKeyOrThrow(String sellerKey) {
+    return sellerRepository.findBySellerKey(sellerKey)
+        .orElseThrow(() -> new CustomException(SELLER_NOT_FOUND));
+  }
 }
