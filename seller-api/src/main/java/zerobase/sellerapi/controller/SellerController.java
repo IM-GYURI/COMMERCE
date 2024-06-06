@@ -67,7 +67,7 @@ public class SellerController {
       SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
       return ResponseEntity.ok(sellerDto);
     } catch (CustomException e) {
-      return ResponseEntity.status(403).body("SELLER NOT FOUND");
+      return ResponseEntity.status(403).body("IS NOT SAME SELLER");
     }
   }
 
@@ -86,7 +86,7 @@ public class SellerController {
     try {
       SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
     } catch (CustomException e) {
-      return ResponseEntity.status(403).body("SELLER NOT FOUND");
+      return ResponseEntity.status(403).body("IS NOT SAME SELLER");
     }
 
     SellerDto updated = sellerService.edit(editDto);
@@ -108,7 +108,7 @@ public class SellerController {
     try {
       SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
     } catch (CustomException e) {
-      return ResponseEntity.status(403).body("SELLER NOT FOUND");
+      return ResponseEntity.status(403).body("IS NOT SAME SELLER");
     }
 
     sellerKey = sellerService.delete(sellerKey);
