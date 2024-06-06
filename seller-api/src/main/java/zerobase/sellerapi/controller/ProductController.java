@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import zerobase.common.exception.CustomException;
 import zerobase.sellerapi.dto.product.EditDto;
 import zerobase.sellerapi.dto.product.ProductDto;
 import zerobase.sellerapi.dto.product.RegistrationDto;
+import zerobase.sellerapi.exception.SellerCustomException;
 import zerobase.sellerapi.service.ProductService;
 
 @RequestMapping("/product")
@@ -52,7 +52,7 @@ public class ProductController {
       @RequestHeader("Authorization") String token, @RequestBody @Valid EditDto editDto) {
     try {
       ProductDto productDto = productService.validateAuthorizationAndGetSeller(productKey, token);
-    } catch (CustomException e) {
+    } catch (SellerCustomException e) {
       return ResponseEntity.status(403).body("IS NOT SAME SELLER");
     }
 
@@ -65,7 +65,7 @@ public class ProductController {
       @RequestHeader("Authorization") String token) {
     try {
       ProductDto productDto = productService.validateAuthorizationAndGetSeller(productKey, token);
-    } catch (CustomException e) {
+    } catch (SellerCustomException e) {
       return ResponseEntity.status(403).body("IS NOT SAME SELLER");
     }
 
