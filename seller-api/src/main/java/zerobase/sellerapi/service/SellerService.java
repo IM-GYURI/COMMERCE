@@ -1,6 +1,8 @@
 package zerobase.sellerapi.service;
 
+import static zerobase.common.exception.ErrorCode.CUSTOMER_NOT_FOUND;
 import static zerobase.common.exception.ErrorCode.SELLER_ALREADY_EXISTS;
+import static zerobase.common.exception.ErrorCode.SELLER_NOT_FOUND;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zerobase.common.exception.CustomException;
 import zerobase.common.util.KeyGenerator;
+import zerobase.sellerapi.dto.seller.EditDto;
 import zerobase.sellerapi.dto.seller.SellerDto;
 import zerobase.sellerapi.dto.seller.SellerSignInDto;
 import zerobase.sellerapi.dto.seller.SellerSignUpDto;
@@ -59,5 +62,35 @@ public class SellerService {
         ));
 
     return SellerDto.fromEntity((SellerEntity) authentication.getPrincipal());
+  }
+
+  public SellerDto findByEmail(String email) {
+    return SellerDto.fromEntity(sellerRepository.findByEmail(email)
+        .orElseThrow(() -> new CustomException(CUSTOMER_NOT_FOUND)));
+  }
+
+  @Transactional
+  public SellerDto edit(EditDto editDto) {
+    SellerEntity seller = sellerRepository.findBySellerKey(editDto.getSellerKey())
+        .orElseThrow(() -> new CustomException(SELLER_NOT_FOUND));
+
+    seller.updateSeller(editDto);
+
+    return SellerDto.fromEntity(seller);
+  }
+
+  @Transactional
+  public String delete(String sellerKey) {
+    validateSellerExistsBySellerKey(sellerKey);
+
+    sellerRepository.deleteBySellerKey(sellerKey);
+
+    return sellerKey;
+  }
+
+  private void validateSellerExistsBySellerKey(String sellerKey) {
+    if (!sellerRepository.existsBySellerKey(sellerKey)) {
+      throw new CustomException(SELLER_NOT_FOUND);
+    }
   }
 }
