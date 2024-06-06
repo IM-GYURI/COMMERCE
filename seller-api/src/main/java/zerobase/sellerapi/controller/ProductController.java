@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,5 +57,20 @@ public class ProductController {
     }
 
     return ResponseEntity.ok(productService.edit(editDto));
+  }
+
+  @PreAuthorize("hasRole('SELLER')")
+  @DeleteMapping("/{productKey}")
+  public ResponseEntity<?> deleteProduct(@PathVariable String productKey,
+      @RequestHeader("Authorization") String token) {
+    try {
+      ProductDto productDto = productService.validateAuthorizationAndGetSeller(productKey, token);
+    } catch (CustomException e) {
+      return ResponseEntity.status(403).body("IS NOT SAME SELLER");
+    }
+
+    productKey = productService.delete(productKey, token);
+
+    return ResponseEntity.ok("delete " + productKey);
   }
 }
