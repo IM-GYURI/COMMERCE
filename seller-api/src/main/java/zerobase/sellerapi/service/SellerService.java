@@ -1,8 +1,8 @@
 package zerobase.sellerapi.service;
 
-import static zerobase.common.exception.ErrorCode.INVALID_REQUEST;
-import static zerobase.common.exception.ErrorCode.SELLER_ALREADY_EXISTS;
-import static zerobase.common.exception.ErrorCode.SELLER_NOT_FOUND;
+import static zerobase.common.exception.CommonErrorCode.INVALID_REQUEST;
+import static zerobase.sellerapi.exception.SellerErrorCode.SELLER_ALREADY_EXISTS;
+import static zerobase.sellerapi.exception.SellerErrorCode.SELLER_NOT_FOUND;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,13 +11,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import zerobase.common.exception.CustomException;
 import zerobase.common.util.KeyGenerator;
 import zerobase.sellerapi.dto.seller.EditDto;
 import zerobase.sellerapi.dto.seller.SellerDto;
 import zerobase.sellerapi.dto.seller.SellerSignInDto;
 import zerobase.sellerapi.dto.seller.SellerSignUpDto;
 import zerobase.sellerapi.entity.SellerEntity;
+import zerobase.sellerapi.exception.SellerCustomException;
 import zerobase.sellerapi.repository.SellerRepository;
 import zerobase.sellerapi.security.TokenProvider;
 
@@ -50,7 +50,7 @@ public class SellerService {
 
   private void validateSellerExists(String email) {
     if (sellerRepository.existsByEmail(email)) {
-      throw new CustomException(SELLER_ALREADY_EXISTS);
+      throw new SellerCustomException(SELLER_ALREADY_EXISTS);
     }
   }
 
@@ -68,13 +68,13 @@ public class SellerService {
 
   public SellerDto findByEmail(String email) {
     return SellerDto.fromEntity(sellerRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(SELLER_NOT_FOUND)));
+        .orElseThrow(() -> new SellerCustomException(SELLER_NOT_FOUND)));
   }
 
   @Transactional
   public SellerDto edit(EditDto editDto) {
     SellerEntity seller = sellerRepository.findBySellerKey(editDto.getSellerKey())
-        .orElseThrow(() -> new CustomException(SELLER_NOT_FOUND));
+        .orElseThrow(() -> new SellerCustomException(SELLER_NOT_FOUND));
 
     seller.updateSeller(editDto);
 
@@ -92,7 +92,7 @@ public class SellerService {
 
   private void validateSellerExistsBySellerKey(String sellerKey) {
     if (!sellerRepository.existsBySellerKey(sellerKey)) {
-      throw new CustomException(SELLER_NOT_FOUND);
+      throw new SellerCustomException(SELLER_NOT_FOUND);
     }
   }
 
@@ -108,7 +108,7 @@ public class SellerService {
     String keyOfSeller = sellerDto.getSellerKey();
 
     if (!sellerKey.equals(keyOfSeller)) {
-      throw new CustomException(INVALID_REQUEST);
+      throw new SellerCustomException(INVALID_REQUEST);
     }
 
     return sellerDto;
@@ -116,6 +116,6 @@ public class SellerService {
 
   public SellerEntity findBySellerKeyOrThrow(String sellerKey) {
     return sellerRepository.findBySellerKey(sellerKey)
-        .orElseThrow(() -> new CustomException(SELLER_NOT_FOUND));
+        .orElseThrow(() -> new SellerCustomException(SELLER_NOT_FOUND));
   }
 }
