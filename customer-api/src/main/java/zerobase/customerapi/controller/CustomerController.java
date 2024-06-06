@@ -56,6 +56,13 @@ public class CustomerController {
     return ResponseEntity.ok().headers(headers).body(customerDto);
   }
 
+  /**
+   * 회원 정보 조회 : 본인만 가능
+   *
+   * @param customerKey
+   * @param token
+   * @return
+   */
   @GetMapping("/{customerKey}")
   public ResponseEntity<?> customerInformation(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token) {
@@ -82,6 +89,14 @@ public class CustomerController {
     return ResponseEntity.ok(customerDto);
   }
 
+  /**
+   * 회원 정보 수정 : 본인만 가능
+   *
+   * @param customerKey
+   * @param token
+   * @param editDto
+   * @return
+   */
   @PatchMapping("/{customerKey}")
   public ResponseEntity<?> editCustomerInformation(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token, @RequestBody EditDto editDto) {
@@ -110,6 +125,13 @@ public class CustomerController {
     return ResponseEntity.ok(updated);
   }
 
+  /**
+   * 회원 탈퇴 : 본인만 가능
+   *
+   * @param customerKey
+   * @param token
+   * @return
+   */
   @DeleteMapping("/{customerKey}")
   public ResponseEntity<?> deleteCustomer(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token) {
