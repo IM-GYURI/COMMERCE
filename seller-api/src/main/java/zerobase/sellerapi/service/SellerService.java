@@ -1,6 +1,6 @@
 package zerobase.sellerapi.service;
 
-import static zerobase.common.exception.ErrorCode.CUSTOMER_NOT_FOUND;
+import static zerobase.common.exception.ErrorCode.INVALID_REQUEST;
 import static zerobase.common.exception.ErrorCode.SELLER_ALREADY_EXISTS;
 import static zerobase.common.exception.ErrorCode.SELLER_NOT_FOUND;
 
@@ -19,6 +19,7 @@ import zerobase.sellerapi.dto.seller.SellerSignInDto;
 import zerobase.sellerapi.dto.seller.SellerSignUpDto;
 import zerobase.sellerapi.entity.SellerEntity;
 import zerobase.sellerapi.repository.SellerRepository;
+import zerobase.sellerapi.security.TokenProvider;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +28,7 @@ public class SellerService {
   private final SellerRepository sellerRepository;
   private final PasswordEncoder passwordEncoder;
   private final KeyGenerator keyGenerator;
+  private final TokenProvider tokenProvider;
   private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
   /**
@@ -66,7 +68,7 @@ public class SellerService {
 
   public SellerDto findByEmail(String email) {
     return SellerDto.fromEntity(sellerRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(CUSTOMER_NOT_FOUND)));
+        .orElseThrow(() -> new CustomException(SELLER_NOT_FOUND)));
   }
 
   @Transactional
@@ -92,5 +94,23 @@ public class SellerService {
     if (!sellerRepository.existsBySellerKey(sellerKey)) {
       throw new CustomException(SELLER_NOT_FOUND);
     }
+  }
+
+  public SellerDto validateAuthorizationAndGetSeller(String sellerKey, String token) {
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+    }
+
+    Authentication authentication = tokenProvider.getAuthentication(token);
+    String email = authentication.getName();
+
+    SellerDto sellerDto = findByEmail(email);
+    String keyOfSeller = sellerDto.getSellerKey();
+
+    if (!sellerKey.equals(keyOfSeller)) {
+      throw new CustomException(INVALID_REQUEST);
+    }
+
+    return sellerDto;
   }
 }

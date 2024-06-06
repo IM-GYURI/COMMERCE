@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import zerobase.common.exception.CustomException;
 import zerobase.sellerapi.dto.seller.EditDto;
 import zerobase.sellerapi.dto.seller.SellerDto;
 import zerobase.sellerapi.dto.seller.SellerSignInDto;
@@ -59,29 +59,14 @@ public class SellerController {
    * @return
    */
   @GetMapping("/{sellerKey}")
-  public ResponseEntity<?> customerInformation(@PathVariable String sellerKey,
+  public ResponseEntity<?> sellerInformation(@PathVariable String sellerKey,
       @RequestHeader("Authorization") String token) {
-    if (token != null && token.startsWith("Bearer ")) {
-      token = token.substring(7);
-    } else {
-      return ResponseEntity.status(403).body("Access Denied");
+    try {
+      SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
+      return ResponseEntity.ok(sellerDto);
+    } catch (CustomException e) {
+      return ResponseEntity.status(403).body("SELLER NOT FOUND");
     }
-
-    if (!tokenProvider.validateToken(token)) {
-      return ResponseEntity.status(403).body("Invalid Token");
-    }
-
-    Authentication authentication = tokenProvider.getAuthentication(token);
-    String email = authentication.getName();
-
-    SellerDto sellerDto = sellerService.findByEmail(email);
-    String keyOfSeller = sellerDto.getSellerKey();
-
-    if (!sellerKey.equals(keyOfSeller)) {
-      return ResponseEntity.status(403).body("Access Denied");
-    }
-
-    return ResponseEntity.ok(sellerDto);
   }
 
   /**
@@ -93,26 +78,12 @@ public class SellerController {
    * @return
    */
   @PatchMapping("/{sellerKey}")
-  public ResponseEntity<?> editCustomerInformation(@PathVariable String sellerKey,
+  public ResponseEntity<?> editSellerInformation(@PathVariable String sellerKey,
       @RequestHeader("Authorization") String token, @RequestBody EditDto editDto) {
-    if (token != null && token.startsWith("Bearer ")) {
-      token = token.substring(7);
-    } else {
-      return ResponseEntity.status(403).body("Access Denied");
-    }
-
-    if (!tokenProvider.validateToken(token)) {
-      return ResponseEntity.status(403).body("Invalid Token");
-    }
-
-    Authentication authentication = tokenProvider.getAuthentication(token);
-    String email = authentication.getName();
-
-    SellerDto sellerDto = sellerService.findByEmail(email);
-    String keyOfSeller = sellerDto.getSellerKey();
-
-    if (!sellerKey.equals(keyOfSeller)) {
-      return ResponseEntity.status(403).body("Access Denied");
+    try {
+      SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
+    } catch (CustomException e) {
+      return ResponseEntity.status(403).body("SELLER NOT FOUND");
     }
 
     SellerDto updated = sellerService.edit(editDto);
@@ -128,26 +99,12 @@ public class SellerController {
    * @return
    */
   @DeleteMapping("/{sellerKey}")
-  public ResponseEntity<?> deleteCustomer(@PathVariable String sellerKey,
+  public ResponseEntity<?> deleteSeller(@PathVariable String sellerKey,
       @RequestHeader("Authorization") String token) {
-    if (token != null && token.startsWith("Bearer ")) {
-      token = token.substring(7);
-    } else {
-      return ResponseEntity.status(403).body("Access Denied");
-    }
-
-    if (!tokenProvider.validateToken(token)) {
-      return ResponseEntity.status(403).body("Invalid Token");
-    }
-
-    Authentication authentication = tokenProvider.getAuthentication(token);
-    String email = authentication.getName();
-
-    SellerDto sellerDto = sellerService.findByEmail(email);
-    String keyOfSeller = sellerDto.getSellerKey();
-
-    if (!sellerKey.equals(keyOfSeller)) {
-      return ResponseEntity.status(403).body("Access Denied");
+    try {
+      SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
+    } catch (CustomException e) {
+      return ResponseEntity.status(403).body("SELLER NOT FOUND");
     }
 
     sellerKey = sellerService.delete(sellerKey);
