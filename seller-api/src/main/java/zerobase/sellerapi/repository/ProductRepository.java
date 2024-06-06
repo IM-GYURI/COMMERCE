@@ -7,4 +7,6 @@ import zerobase.sellerapi.entity.ProductEntity;
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
   Optional<ProductEntity> findByProductKey(String productKey);
+
+  void deleteByProductKey(String productKey);
 }
