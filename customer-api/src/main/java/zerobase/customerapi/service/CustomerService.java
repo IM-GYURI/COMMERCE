@@ -1,8 +1,8 @@
 package zerobase.customerapi.service;
 
-import static zerobase.common.exception.ErrorCode.CUSTOMER_ALREADY_EXISTS;
-import static zerobase.common.exception.ErrorCode.CUSTOMER_NOT_FOUND;
-import static zerobase.common.exception.ErrorCode.INVALID_REQUEST;
+import static zerobase.common.exception.CommonErrorCode.INVALID_REQUEST;
+import static zerobase.customerapi.exception.CustomerErrorCode.CUSTOMER_ALREADY_EXISTS;
+import static zerobase.customerapi.exception.CustomerErrorCode.CUSTOMER_NOT_FOUND;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,15 +11,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import zerobase.common.exception.CustomException;
 import zerobase.common.util.KeyGenerator;
 import zerobase.customerapi.dto.customer.CustomerDto;
 import zerobase.customerapi.dto.customer.CustomerSignInDto;
 import zerobase.customerapi.dto.customer.CustomerSignUpDto;
 import zerobase.customerapi.dto.customer.EditDto;
 import zerobase.customerapi.entity.CustomerEntity;
+import zerobase.customerapi.exception.CustomerCustomException;
 import zerobase.customerapi.repository.CustomerRepository;
 import zerobase.customerapi.security.TokenProvider;
+
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +51,7 @@ public class CustomerService {
 
   private void validateCustomerExistsByEmail(String email) {
     if (customerRepository.existsByEmail(email)) {
-      throw new CustomException(CUSTOMER_ALREADY_EXISTS);
+      throw new CustomerCustomException(CUSTOMER_ALREADY_EXISTS);
     }
   }
 
@@ -68,13 +69,13 @@ public class CustomerService {
 
   public CustomerDto findByEmail(String email) {
     return CustomerDto.fromEntity(customerRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(CUSTOMER_NOT_FOUND)));
+        .orElseThrow(() -> new CustomerCustomException(CUSTOMER_NOT_FOUND)));
   }
 
   @Transactional
   public CustomerDto edit(EditDto editDto) {
     CustomerEntity customer = customerRepository.findByCustomerKey(editDto.getCustomerKey())
-        .orElseThrow(() -> new CustomException(CUSTOMER_NOT_FOUND));
+        .orElseThrow(() -> new CustomerCustomException(CUSTOMER_NOT_FOUND));
 
     customer.updateCustomer(editDto);
 
@@ -92,7 +93,7 @@ public class CustomerService {
 
   private void validateCustomerExistsByCustomerKey(String customerKey) {
     if (!customerRepository.existsByCustomerKey(customerKey)) {
-      throw new CustomException(CUSTOMER_NOT_FOUND);
+      throw new CustomerCustomException(CUSTOMER_NOT_FOUND);
     }
   }
 
@@ -108,7 +109,7 @@ public class CustomerService {
     String keyOfCustomer = customerDto.getCustomerKey();
 
     if (!customerKey.equals(keyOfCustomer)) {
-      throw new CustomException(INVALID_REQUEST);
+      throw new CustomerCustomException(INVALID_REQUEST);
     }
 
     return customerDto;
