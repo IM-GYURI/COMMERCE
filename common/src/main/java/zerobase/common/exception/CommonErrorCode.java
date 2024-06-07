@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum CommonErrorCode implements ErrorCode {
+  // Product
+  PRODUCT_NOT_FOUND(NOT_FOUND, "상품을 찾을 수 없습니다,"),
+
   // Global
   RESOURCE_NOT_FOUND(NOT_FOUND, "요청한 자원을 찾을 수 없습니다."),
   INVALID_REQUEST(BAD_REQUEST, "올바르지 않은 요청입니다.");
