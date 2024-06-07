@@ -38,7 +38,8 @@ public class SecurityConfig {
         .authorizeHttpRequests((request) -> request.requestMatchers(
                     "/",
                     "/customer/signup",
-                    "/customer/signin"
+                    "/customer/signin",
+                    "/product/{productKey}"
                 ).permitAll()
                 .anyRequest().authenticated()
         )
