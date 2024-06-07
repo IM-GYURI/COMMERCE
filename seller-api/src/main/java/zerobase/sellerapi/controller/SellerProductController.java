@@ -16,14 +16,14 @@ import zerobase.sellerapi.dto.product.EditDto;
 import zerobase.sellerapi.dto.product.ProductDto;
 import zerobase.sellerapi.dto.product.RegistrationDto;
 import zerobase.sellerapi.exception.SellerCustomException;
-import zerobase.sellerapi.service.ProductService;
+import zerobase.sellerapi.service.SellerProductService;
 
 @RequestMapping("/product")
 @RequiredArgsConstructor
 @RestController
-public class ProductController {
+public class SellerProductController {
 
-  private final ProductService productService;
+  private final SellerProductService sellerProductService;
 
   /**
    * 상품 등록 : SELLER만 가능
@@ -35,7 +35,7 @@ public class ProductController {
   @PreAuthorize("hasRole('SELLER')")
   @PostMapping("/registration")
   public ResponseEntity<?> registration(@RequestBody @Valid RegistrationDto registrationDto) {
-    ProductDto productDto = productService.registration(registrationDto);
+    ProductDto productDto = sellerProductService.registration(registrationDto);
 
     return ResponseEntity.ok(productDto);
   }
@@ -51,12 +51,13 @@ public class ProductController {
   public ResponseEntity<?> editProductInformation(@PathVariable String productKey,
       @RequestHeader("Authorization") String token, @RequestBody @Valid EditDto editDto) {
     try {
-      ProductDto productDto = productService.validateAuthorizationAndGetSeller(productKey, token);
+      ProductDto productDto = sellerProductService.validateAuthorizationAndGetSeller(productKey,
+          token);
     } catch (SellerCustomException e) {
       return ResponseEntity.status(403).body("IS NOT SAME SELLER");
     }
 
-    return ResponseEntity.ok(productService.edit(editDto));
+    return ResponseEntity.ok(sellerProductService.edit(editDto));
   }
 
   @PreAuthorize("hasRole('SELLER')")
@@ -64,12 +65,13 @@ public class ProductController {
   public ResponseEntity<?> deleteProduct(@PathVariable String productKey,
       @RequestHeader("Authorization") String token) {
     try {
-      ProductDto productDto = productService.validateAuthorizationAndGetSeller(productKey, token);
+      ProductDto productDto = sellerProductService.validateAuthorizationAndGetSeller(productKey,
+          token);
     } catch (SellerCustomException e) {
       return ResponseEntity.status(403).body("IS NOT SAME SELLER");
     }
 
-    productKey = productService.delete(productKey, token);
+    productKey = sellerProductService.delete(productKey, token);
 
     return ResponseEntity.ok("delete " + productKey);
   }
