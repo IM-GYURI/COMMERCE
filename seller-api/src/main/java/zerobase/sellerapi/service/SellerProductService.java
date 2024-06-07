@@ -1,7 +1,7 @@
 package zerobase.sellerapi.service;
 
 import static zerobase.common.exception.CommonErrorCode.INVALID_REQUEST;
-import static zerobase.sellerapi.exception.SellerErrorCode.PRODUCT_NOT_FOUND;
+import static zerobase.common.exception.CommonErrorCode.PRODUCT_NOT_FOUND;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -20,7 +20,7 @@ import zerobase.sellerapi.security.TokenProvider;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ProductService {
+public class SellerProductService {
 
   private final ProductRepository productRepository;
   private final SellerService sellerService;
