@@ -20,10 +20,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
  */
 @RequiredArgsConstructor
 @Component
-public class AuthenticationFilter extends OncePerRequestFilter {
+public class CustomerAuthenticationFilter extends OncePerRequestFilter {
 
   public static final String TOKEN_PREFIX = "Bearer ";
-  private final TokenProvider tokenProvider;
+  private final CustomerTokenProvider customerTokenProvider;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request,
@@ -32,8 +32,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     String token = resolveToken(request);
 
-    if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
-      Authentication authentication = tokenProvider.getAuthentication(token);
+    if (StringUtils.hasText(token) && customerTokenProvider.validateToken(token)) {
+      Authentication authentication = customerTokenProvider.getAuthentication(token);
       SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
