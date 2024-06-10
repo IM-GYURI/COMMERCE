@@ -18,7 +18,6 @@ import zerobase.sellerapi.dto.seller.EditDto;
 import zerobase.sellerapi.dto.seller.SellerDto;
 import zerobase.sellerapi.dto.seller.SellerSignInDto;
 import zerobase.sellerapi.dto.seller.SellerSignUpDto;
-import zerobase.sellerapi.exception.SellerCustomException;
 import zerobase.sellerapi.security.TokenProvider;
 import zerobase.sellerapi.service.SellerService;
 
@@ -63,12 +62,8 @@ public class SellerController {
   @GetMapping("/{sellerKey}")
   public ResponseEntity<?> sellerInformation(@PathVariable String sellerKey,
       @RequestHeader("Authorization") String token) {
-    try {
-      SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
-      return ResponseEntity.ok(sellerDto);
-    } catch (SellerCustomException e) {
-      return ResponseEntity.status(403).body("IS NOT SAME SELLER");
-    }
+    SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
+    return ResponseEntity.ok(sellerDto);
   }
 
   /**
@@ -83,15 +78,11 @@ public class SellerController {
   @PatchMapping("/{sellerKey}")
   public ResponseEntity<?> editSellerInformation(@PathVariable String sellerKey,
       @RequestHeader("Authorization") String token, @RequestBody @Valid EditDto editDto) {
-    try {
-      SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
-    } catch (SellerCustomException e) {
-      return ResponseEntity.status(403).body("IS NOT SAME SELLER");
-    }
+    SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
 
-    SellerDto updated = sellerService.edit(editDto);
+    sellerDto = sellerService.edit(editDto);
 
-    return ResponseEntity.ok(updated);
+    return ResponseEntity.ok(sellerDto);
   }
 
   /**
@@ -105,11 +96,7 @@ public class SellerController {
   @DeleteMapping("/{sellerKey}")
   public ResponseEntity<?> deleteSeller(@PathVariable String sellerKey,
       @RequestHeader("Authorization") String token) {
-    try {
-      SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
-    } catch (SellerCustomException e) {
-      return ResponseEntity.status(403).body("IS NOT SAME SELLER");
-    }
+    SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
 
     sellerKey = sellerService.delete(sellerKey);
 
