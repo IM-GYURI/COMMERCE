@@ -3,7 +3,7 @@ package zerobase.common.exception;
 import lombok.Getter;
 
 @Getter
-public class CommonCustomException extends RuntimeException implements CustomException {
+public class CommonCustomException extends RuntimeException {
 
   private final ErrorCode errorCode;
   private final String message;
