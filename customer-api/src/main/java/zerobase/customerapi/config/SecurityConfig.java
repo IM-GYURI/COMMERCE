@@ -35,13 +35,13 @@ public class SecurityConfig {
             HeadersConfigurer.FrameOptionsConfig::disable).disable())
         .sessionManagement(c ->
             c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests((request) -> request.requestMatchers(
-                    "/",
-                    "/customer/signup",
-                    "/customer/signin",
-                    "/product/{productKey}"
-                ).permitAll()
-                .anyRequest().authenticated()
+        .authorizeHttpRequests((request) -> request
+            .requestMatchers(
+                "/",
+                "/customer/signup",
+                "/customer/signin"
+            ).permitAll()
+            .anyRequest().authenticated()
         )
         .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling((exceptions) -> exceptions
