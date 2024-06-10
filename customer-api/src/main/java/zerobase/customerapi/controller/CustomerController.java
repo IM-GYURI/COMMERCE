@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import zerobase.customerapi.dto.customer.CustomerDto;
+import zerobase.customerapi.dto.customer.CustomerEditDto;
 import zerobase.customerapi.dto.customer.CustomerSignInDto;
 import zerobase.customerapi.dto.customer.CustomerSignUpDto;
-import zerobase.customerapi.dto.customer.EditDto;
-import zerobase.customerapi.security.TokenProvider;
+import zerobase.customerapi.security.CustomerTokenProvider;
 import zerobase.customerapi.service.CustomerService;
 
 /**
@@ -31,7 +31,7 @@ import zerobase.customerapi.service.CustomerService;
 public class CustomerController {
 
   private final CustomerService customerService;
-  private final TokenProvider tokenProvider;
+  private final CustomerTokenProvider customerTokenProvider;
 
   /**
    * 회원 가입
@@ -47,7 +47,7 @@ public class CustomerController {
   @PostMapping("/signin")
   public ResponseEntity<?> signIn(@RequestBody @Valid CustomerSignInDto signInDto) {
     CustomerDto customerDto = customerService.signIn(signInDto);
-    String token = tokenProvider.generateToken(customerDto);
+    String token = customerTokenProvider.generateToken(customerDto);
 
     HttpHeaders headers = new HttpHeaders();
     headers.set(HttpHeaders.AUTHORIZATION, token);
@@ -70,7 +70,7 @@ public class CustomerController {
       token = token.substring(7);
     }
 
-    Authentication authentication = tokenProvider.getAuthentication(token);
+    Authentication authentication = customerTokenProvider.getAuthentication(token);
     String email = authentication.getName();
 
     CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey, email);
@@ -83,23 +83,23 @@ public class CustomerController {
    *
    * @param customerKey
    * @param token
-   * @param editDto
+   * @param customerEditDto
    * @return
    */
   @PreAuthorize("hasRole('CUSTOMER')")
   @PatchMapping("/{customerKey}")
   public ResponseEntity<?> editCustomerInformation(@PathVariable String customerKey,
-      @RequestHeader("Authorization") String token, @RequestBody EditDto editDto) {
+      @RequestHeader("Authorization") String token, @RequestBody CustomerEditDto customerEditDto) {
     if (token != null && token.startsWith("Bearer ")) {
       token = token.substring(7);
     }
 
-    Authentication authentication = tokenProvider.getAuthentication(token);
+    Authentication authentication = customerTokenProvider.getAuthentication(token);
     String email = authentication.getName();
 
     CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey, email);
 
-    customerDto = customerService.edit(editDto);
+    customerDto = customerService.edit(customerEditDto);
 
     return ResponseEntity.ok(customerDto);
   }
@@ -119,7 +119,7 @@ public class CustomerController {
       token = token.substring(7);
     }
 
-    Authentication authentication = tokenProvider.getAuthentication(token);
+    Authentication authentication = customerTokenProvider.getAuthentication(token);
     String email = authentication.getName();
 
     CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey, email);
