@@ -11,13 +11,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import zerobase.common.exception.CommonCustomException;
 import zerobase.common.util.KeyGenerator;
 import zerobase.customerapi.dto.customer.CustomerDto;
 import zerobase.customerapi.dto.customer.CustomerSignInDto;
 import zerobase.customerapi.dto.customer.CustomerSignUpDto;
 import zerobase.customerapi.dto.customer.EditDto;
 import zerobase.customerapi.entity.CustomerEntity;
-import zerobase.customerapi.exception.CustomerCustomException;
 import zerobase.customerapi.repository.CustomerRepository;
 import zerobase.customerapi.security.TokenProvider;
 
@@ -51,7 +51,7 @@ public class CustomerService {
 
   private void validateCustomerExistsByEmail(String email) {
     if (customerRepository.existsByEmail(email)) {
-      throw new CustomerCustomException(CUSTOMER_ALREADY_EXISTS);
+      throw new CommonCustomException(CUSTOMER_ALREADY_EXISTS);
     }
   }
 
@@ -69,13 +69,13 @@ public class CustomerService {
 
   public CustomerDto findByEmail(String email) {
     return CustomerDto.fromEntity(customerRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomerCustomException(CUSTOMER_NOT_FOUND)));
+        .orElseThrow(() -> new CommonCustomException(CUSTOMER_NOT_FOUND)));
   }
 
   @Transactional
   public CustomerDto edit(EditDto editDto) {
     CustomerEntity customer = customerRepository.findByCustomerKey(editDto.getCustomerKey())
-        .orElseThrow(() -> new CustomerCustomException(CUSTOMER_NOT_FOUND));
+        .orElseThrow(() -> new CommonCustomException(CUSTOMER_NOT_FOUND));
 
     customer.updateCustomer(editDto);
 
@@ -93,23 +93,16 @@ public class CustomerService {
 
   private void validateCustomerExistsByCustomerKey(String customerKey) {
     if (!customerRepository.existsByCustomerKey(customerKey)) {
-      throw new CustomerCustomException(CUSTOMER_NOT_FOUND);
+      throw new CommonCustomException(CUSTOMER_NOT_FOUND);
     }
   }
 
-  public CustomerDto validateAuthorizationAndGetSeller(String customerKey, String token) {
-    if (token != null && token.startsWith("Bearer ")) {
-      token = token.substring(7);
-    }
-
-    Authentication authentication = tokenProvider.getAuthentication(token);
-    String email = authentication.getName();
-
+  public CustomerDto validateAuthorizationAndGetSeller(String customerKey, String email) {
     CustomerDto customerDto = findByEmail(email);
     String keyOfCustomer = customerDto.getCustomerKey();
 
     if (!customerKey.equals(keyOfCustomer)) {
-      throw new CustomerCustomException(INVALID_REQUEST);
+      throw new CommonCustomException(INVALID_REQUEST);
     }
 
     return customerDto;
