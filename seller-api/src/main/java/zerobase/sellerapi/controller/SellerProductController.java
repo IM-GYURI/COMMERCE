@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import zerobase.sellerapi.dto.product.EditDto;
 import zerobase.sellerapi.dto.product.ProductDto;
 import zerobase.sellerapi.dto.product.RegistrationDto;
-import zerobase.sellerapi.exception.SellerCustomException;
 import zerobase.sellerapi.service.SellerProductService;
 
 @RequestMapping("/product")
@@ -50,12 +49,8 @@ public class SellerProductController {
   @PatchMapping("/{productKey}")
   public ResponseEntity<?> editProductInformation(@PathVariable String productKey,
       @RequestHeader("Authorization") String token, @RequestBody @Valid EditDto editDto) {
-    try {
-      ProductDto productDto = sellerProductService.validateAuthorizationAndGetSeller(productKey,
-          token);
-    } catch (SellerCustomException e) {
-      return ResponseEntity.status(403).body("IS NOT SAME SELLER");
-    }
+    ProductDto productDto = sellerProductService.validateAuthorizationAndGetSeller(productKey,
+        token);
 
     return ResponseEntity.ok(sellerProductService.edit(editDto));
   }
@@ -64,12 +59,8 @@ public class SellerProductController {
   @DeleteMapping("/{productKey}")
   public ResponseEntity<?> deleteProduct(@PathVariable String productKey,
       @RequestHeader("Authorization") String token) {
-    try {
-      ProductDto productDto = sellerProductService.validateAuthorizationAndGetSeller(productKey,
-          token);
-    } catch (SellerCustomException e) {
-      return ResponseEntity.status(403).body("IS NOT SAME SELLER");
-    }
+    ProductDto productDto = sellerProductService.validateAuthorizationAndGetSeller(productKey,
+        token);
 
     productKey = sellerProductService.delete(productKey, token);
 
