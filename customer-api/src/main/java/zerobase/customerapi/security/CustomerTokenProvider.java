@@ -25,7 +25,7 @@ import zerobase.customerapi.dto.customer.CustomerDto;
  */
 @RequiredArgsConstructor
 @Component
-public class TokenProvider {
+public class CustomerTokenProvider {
 
   @Value("${spring.jwt.secret}")
   private String key;
