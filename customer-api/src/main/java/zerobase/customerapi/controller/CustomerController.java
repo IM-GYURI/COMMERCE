@@ -18,7 +18,6 @@ import zerobase.customerapi.dto.customer.CustomerDto;
 import zerobase.customerapi.dto.customer.CustomerSignInDto;
 import zerobase.customerapi.dto.customer.CustomerSignUpDto;
 import zerobase.customerapi.dto.customer.EditDto;
-import zerobase.customerapi.exception.CustomerCustomException;
 import zerobase.customerapi.security.TokenProvider;
 import zerobase.customerapi.service.CustomerService;
 
@@ -66,13 +65,9 @@ public class CustomerController {
   @GetMapping("/{customerKey}")
   public ResponseEntity<?> customerInformation(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token) {
-    try {
-      CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
-          token);
-      return ResponseEntity.ok(customerDto);
-    } catch (CustomerCustomException e) {
-      return ResponseEntity.status(403).body("IS NOT SAME CUSTOMER");
-    }
+    CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
+        token);
+    return ResponseEntity.ok(customerDto);
   }
 
   /**
@@ -90,9 +85,9 @@ public class CustomerController {
     CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
         token);
 
-    CustomerDto updated = customerService.edit(editDto);
+    customerDto = customerService.edit(editDto);
 
-    return ResponseEntity.ok(updated);
+    return ResponseEntity.ok(customerDto);
   }
 
   /**
@@ -106,12 +101,8 @@ public class CustomerController {
   @DeleteMapping("/{customerKey}")
   public ResponseEntity<?> deleteCustomer(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token) {
-    try {
-      CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
-          token);
-    } catch (CustomerCustomException e) {
-      return ResponseEntity.status(403).body("IS NOT SAME CUSTOMER");
-    }
+    CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
+        token);
 
     customerKey = customerService.delete(customerKey);
 
