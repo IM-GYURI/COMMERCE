@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -65,8 +66,15 @@ public class CustomerController {
   @GetMapping("/{customerKey}")
   public ResponseEntity<?> customerInformation(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token) {
-    CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
-        token);
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+    }
+
+    Authentication authentication = tokenProvider.getAuthentication(token);
+    String email = authentication.getName();
+
+    CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey, email);
+
     return ResponseEntity.ok(customerDto);
   }
 
@@ -82,8 +90,14 @@ public class CustomerController {
   @PatchMapping("/{customerKey}")
   public ResponseEntity<?> editCustomerInformation(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token, @RequestBody EditDto editDto) {
-    CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
-        token);
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+    }
+
+    Authentication authentication = tokenProvider.getAuthentication(token);
+    String email = authentication.getName();
+
+    CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey, email);
 
     customerDto = customerService.edit(editDto);
 
@@ -101,8 +115,14 @@ public class CustomerController {
   @DeleteMapping("/{customerKey}")
   public ResponseEntity<?> deleteCustomer(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token) {
-    CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
-        token);
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+    }
+
+    Authentication authentication = tokenProvider.getAuthentication(token);
+    String email = authentication.getName();
+
+    CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey, email);
 
     customerKey = customerService.delete(customerKey);
 
