@@ -11,13 +11,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import zerobase.common.exception.CommonCustomException;
 import zerobase.common.util.KeyGenerator;
 import zerobase.sellerapi.dto.seller.EditDto;
 import zerobase.sellerapi.dto.seller.SellerDto;
 import zerobase.sellerapi.dto.seller.SellerSignInDto;
 import zerobase.sellerapi.dto.seller.SellerSignUpDto;
 import zerobase.sellerapi.entity.SellerEntity;
-import zerobase.sellerapi.exception.SellerCustomException;
 import zerobase.sellerapi.repository.SellerRepository;
 import zerobase.sellerapi.security.TokenProvider;
 
@@ -50,7 +50,7 @@ public class SellerService {
 
   private void validateSellerExists(String email) {
     if (sellerRepository.existsByEmail(email)) {
-      throw new SellerCustomException(SELLER_ALREADY_EXISTS);
+      throw new CommonCustomException(SELLER_ALREADY_EXISTS);
     }
   }
 
@@ -68,13 +68,13 @@ public class SellerService {
 
   public SellerDto findByEmail(String email) {
     return SellerDto.fromEntity(sellerRepository.findByEmail(email)
-        .orElseThrow(() -> new SellerCustomException(SELLER_NOT_FOUND)));
+        .orElseThrow(() -> new CommonCustomException(SELLER_NOT_FOUND)));
   }
 
   @Transactional
   public SellerDto edit(EditDto editDto) {
     SellerEntity seller = sellerRepository.findBySellerKey(editDto.getSellerKey())
-        .orElseThrow(() -> new SellerCustomException(SELLER_NOT_FOUND));
+        .orElseThrow(() -> new CommonCustomException(SELLER_NOT_FOUND));
 
     seller.updateSeller(editDto);
 
@@ -92,23 +92,16 @@ public class SellerService {
 
   private void validateSellerExistsBySellerKey(String sellerKey) {
     if (!sellerRepository.existsBySellerKey(sellerKey)) {
-      throw new SellerCustomException(SELLER_NOT_FOUND);
+      throw new CommonCustomException(SELLER_NOT_FOUND);
     }
   }
 
-  public SellerDto validateAuthorizationAndGetSeller(String sellerKey, String token) {
-    if (token != null && token.startsWith("Bearer ")) {
-      token = token.substring(7);
-    }
-
-    Authentication authentication = tokenProvider.getAuthentication(token);
-    String email = authentication.getName();
-
+  public SellerDto validateAuthorizationAndGetSeller(String sellerKey, String email) {
     SellerDto sellerDto = findByEmail(email);
     String keyOfSeller = sellerDto.getSellerKey();
 
     if (!sellerKey.equals(keyOfSeller)) {
-      throw new SellerCustomException(INVALID_REQUEST);
+      throw new CommonCustomException(INVALID_REQUEST);
     }
 
     return sellerDto;
@@ -116,6 +109,6 @@ public class SellerService {
 
   public SellerEntity findBySellerKeyOrThrow(String sellerKey) {
     return sellerRepository.findBySellerKey(sellerKey)
-        .orElseThrow(() -> new SellerCustomException(SELLER_NOT_FOUND));
+        .orElseThrow(() -> new CommonCustomException(SELLER_NOT_FOUND));
   }
 }
