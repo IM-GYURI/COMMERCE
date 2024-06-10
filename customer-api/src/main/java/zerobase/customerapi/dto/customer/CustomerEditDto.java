@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EditDto {
+public class CustomerEditDto {
 
   private String customerKey;
   private String name;
