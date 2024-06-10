@@ -14,7 +14,7 @@ import zerobase.customerapi.repository.CustomerRepository;
  */
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomerCustomUserDetailsService implements UserDetailsService {
 
   private final CustomerRepository customerRepository;
 
