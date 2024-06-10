@@ -7,14 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import zerobase.common.dto.product.EditDto;
+import zerobase.common.dto.product.ProductDto;
+import zerobase.common.dto.product.RegistrationDto;
+import zerobase.common.entity.ProductEntity;
 import zerobase.common.exception.CommonCustomException;
+import zerobase.common.repository.ProductRepository;
 import zerobase.common.util.KeyGenerator;
-import zerobase.sellerapi.dto.product.EditDto;
-import zerobase.sellerapi.dto.product.ProductDto;
-import zerobase.sellerapi.dto.product.RegistrationDto;
-import zerobase.sellerapi.entity.ProductEntity;
 import zerobase.sellerapi.entity.SellerEntity;
-import zerobase.sellerapi.repository.ProductRepository;
 import zerobase.sellerapi.security.TokenProvider;
 
 @Service
@@ -35,7 +35,7 @@ public class SellerProductService {
         registrationDto.getSellerKey());
 
     ProductEntity product = registrationDto.toEntity(KeyGenerator.generateKey());
-    product.setSeller(seller);
+    product.setSeller(seller.getSellerKey());
     productRepository.save(product);
 
     return ProductDto.fromEntity(product);
@@ -64,7 +64,7 @@ public class SellerProductService {
     String email = authentication.getName();
 
     ProductEntity product = findByProductKeyOrThrow(productKey);
-    String sellerKeyFromProductKey = product.getSellerEntity().getSellerKey();
+    String sellerKeyFromProductKey = product.getSellerKey();
 
     String sellerKeyFromEmail = sellerService.findByEmail(email).getSellerKey();
 
