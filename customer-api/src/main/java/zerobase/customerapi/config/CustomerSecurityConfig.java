@@ -15,17 +15,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import zerobase.common.security.CustomAccessDeniedHandler;
 import zerobase.common.security.CustomAuthenticationEntryPoint;
-import zerobase.customerapi.security.AuthenticationFilter;
+import zerobase.customerapi.security.CustomerAuthenticationFilter;
 
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class CustomerSecurityConfig {
 
-  private final AuthenticationFilter authenticationFilter;
+  private final CustomerAuthenticationFilter customerAuthenticationFilter;
 
-  @Bean
+  @Bean(name = "customerSecurityFilterChain")
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .csrf(AbstractHttpConfigurer::disable)
@@ -39,11 +39,12 @@ public class SecurityConfig {
             .requestMatchers(
                 "/",
                 "/customer/signup",
-                "/customer/signin"
+                "/customer/signin",
+                "/product/**"
             ).permitAll()
             .anyRequest().authenticated()
         )
-        .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(customerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling((exceptions) -> exceptions
             .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
             .accessDeniedHandler(new CustomAccessDeniedHandler()));
@@ -51,7 +52,7 @@ public class SecurityConfig {
     return http.build();
   }
 
-  @Bean
+  @Bean(name = "customerPasswordEncoder")
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
