@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -62,7 +63,15 @@ public class SellerController {
   @GetMapping("/{sellerKey}")
   public ResponseEntity<?> sellerInformation(@PathVariable String sellerKey,
       @RequestHeader("Authorization") String token) {
-    SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+    }
+
+    Authentication authentication = tokenProvider.getAuthentication(token);
+    String email = authentication.getName();
+
+    SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, email);
+
     return ResponseEntity.ok(sellerDto);
   }
 
@@ -78,7 +87,14 @@ public class SellerController {
   @PatchMapping("/{sellerKey}")
   public ResponseEntity<?> editSellerInformation(@PathVariable String sellerKey,
       @RequestHeader("Authorization") String token, @RequestBody @Valid EditDto editDto) {
-    SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+    }
+
+    Authentication authentication = tokenProvider.getAuthentication(token);
+    String email = authentication.getName();
+
+    SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, email);
 
     sellerDto = sellerService.edit(editDto);
 
@@ -96,7 +112,14 @@ public class SellerController {
   @DeleteMapping("/{sellerKey}")
   public ResponseEntity<?> deleteSeller(@PathVariable String sellerKey,
       @RequestHeader("Authorization") String token) {
-    SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, token);
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+    }
+
+    Authentication authentication = tokenProvider.getAuthentication(token);
+    String email = authentication.getName();
+
+    SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, email);
 
     sellerKey = sellerService.delete(sellerKey);
 
