@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import zerobase.common.exception.CommonCustomException;
 import zerobase.common.util.KeyGenerator;
 import zerobase.customerapi.dto.customer.CustomerDto;
+import zerobase.customerapi.dto.customer.CustomerEditDto;
 import zerobase.customerapi.dto.customer.CustomerSignInDto;
 import zerobase.customerapi.dto.customer.CustomerSignUpDto;
-import zerobase.customerapi.dto.customer.EditDto;
 import zerobase.customerapi.entity.CustomerEntity;
 import zerobase.customerapi.repository.CustomerRepository;
-import zerobase.customerapi.security.TokenProvider;
+import zerobase.customerapi.security.CustomerTokenProvider;
 
 
 @Service
@@ -29,7 +29,7 @@ public class CustomerService {
   private final CustomerRepository customerRepository;
   private final PasswordEncoder passwordEncoder;
   private final KeyGenerator keyGenerator;
-  private final TokenProvider tokenProvider;
+  private final CustomerTokenProvider customerTokenProvider;
   private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
   /**
@@ -73,11 +73,11 @@ public class CustomerService {
   }
 
   @Transactional
-  public CustomerDto edit(EditDto editDto) {
-    CustomerEntity customer = customerRepository.findByCustomerKey(editDto.getCustomerKey())
+  public CustomerDto edit(CustomerEditDto customerEditDto) {
+    CustomerEntity customer = customerRepository.findByCustomerKey(customerEditDto.getCustomerKey())
         .orElseThrow(() -> new CommonCustomException(CUSTOMER_NOT_FOUND));
 
-    customer.updateCustomer(editDto);
+    customer.updateCustomer(customerEditDto);
 
     return CustomerDto.fromEntity(customer);
   }
