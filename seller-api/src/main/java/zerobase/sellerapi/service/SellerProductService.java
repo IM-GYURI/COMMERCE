@@ -7,13 +7,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import zerobase.common.exception.CommonCustomException;
 import zerobase.common.util.KeyGenerator;
 import zerobase.sellerapi.dto.product.EditDto;
 import zerobase.sellerapi.dto.product.ProductDto;
 import zerobase.sellerapi.dto.product.RegistrationDto;
 import zerobase.sellerapi.entity.ProductEntity;
 import zerobase.sellerapi.entity.SellerEntity;
-import zerobase.sellerapi.exception.SellerCustomException;
 import zerobase.sellerapi.repository.ProductRepository;
 import zerobase.sellerapi.security.TokenProvider;
 
@@ -52,7 +52,7 @@ public class SellerProductService {
 
   private ProductEntity findByProductKeyOrThrow(String productKey) {
     return productRepository.findByProductKey(productKey)
-        .orElseThrow(() -> new SellerCustomException(PRODUCT_NOT_FOUND));
+        .orElseThrow(() -> new CommonCustomException(PRODUCT_NOT_FOUND));
   }
 
   public ProductDto validateAuthorizationAndGetSeller(String productKey, String token) {
@@ -69,7 +69,7 @@ public class SellerProductService {
     String sellerKeyFromEmail = sellerService.findByEmail(email).getSellerKey();
 
     if (!sellerKeyFromProductKey.equals(sellerKeyFromEmail)) {
-      throw new SellerCustomException(INVALID_REQUEST);
+      throw new CommonCustomException(INVALID_REQUEST);
     }
 
     return ProductDto.fromEntity(product);
