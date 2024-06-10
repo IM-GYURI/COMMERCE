@@ -87,12 +87,8 @@ public class CustomerController {
   @PatchMapping("/{customerKey}")
   public ResponseEntity<?> editCustomerInformation(@PathVariable String customerKey,
       @RequestHeader("Authorization") String token, @RequestBody EditDto editDto) {
-    try {
-      CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
-          token);
-    } catch (CustomerCustomException e) {
-      return ResponseEntity.status(403).body("IS NOT SAME CUSTOMER");
-    }
+    CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey,
+        token);
 
     CustomerDto updated = customerService.edit(editDto);
 
