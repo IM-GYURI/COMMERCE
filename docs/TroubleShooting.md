@@ -21,11 +21,12 @@ Body : JSON - RAW
    를 호출한 결과 Body의 내용이 제대로 출력되는 것을 확인
 2. CustomerEntity의 getPassword()가 null을 리턴하고 있는 것을 확인하고 아래와 같이 수정
 
-```
-  @Override
-  public String getPassword() {
-    return password;
-  }
+```java
+
+@Override
+public String getPassword() {
+  return password;
+}
 ```
 
 ### DB : 주소를 한글로 입력 시 오류 발생
@@ -65,7 +66,7 @@ KeyGenerator를 common 모듈 아래로 옮긴 후 customer와 seller의 Service
 1. customer-api와 seller-api에 Bean을 Resolve하는 과정에서 스캔 대상에 common 모듈이 포함되어 있지 않기 때문
 2. 각 모듈에 BeanConfig 생성 후 @ComponentScan 어노테이션을 사용하여 common 모듈도 스캔 대상에 추가
 
-```
+```java
 package zerobase.sellerapi.config;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -79,3 +80,34 @@ public class BeanConfig {
 
 }
 ```
+
+### customer-api : 회원가입 시 401 Unauthorized가 뜨는 오류
+
+SecurityConfig의 authenticationFilter가 제대로 주입되지 않는다는 문구를 확인
+
+⭐ 해결
+
+1. 원래 customer-api의 BeanConfig에 아래와 같이 어노테이션을 작성해두었음
+
+```java
+@ComponentScan("zerobase.common")
+```
+
+2. 이를 CustomerApiApplication으로 그대로 옮김
+3. 다음과 같이 수정해주니 해결
+
+```java
+
+@EnableJpaAuditing
+@SpringBootApplication
+@ComponentScan(basePackages = {"zerobase.common", "zerobase.customerapi"})
+public class CustomerApiApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(CustomerApiApplication.class, args);
+  }
+
+}
+```
+
+4. 문제의 원인은 common 모듈만 스캔하고, 자기 자신을 스캔하지 못했기 때문!
