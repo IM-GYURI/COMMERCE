@@ -81,6 +81,29 @@ public class BeanConfig {
 }
 ```
 
+### 멀티 모듈 : product 관련 코드들이 seller-api 모듈 하에 작성되어, customer-api에서 활용하지 못하는 문제
+
+product 관련 코드들을 seller-api 모듈 하에 작성하였고, customer-api에서 이를 활용하고자 seller-api를 Scan하도록 하였더니 문제가 발생함
+
+⭐ 멘토님의 피드백
+
+1. seller-api 와 customer-api 가 각각 서로 다른 클래스로 entity 를 사용하는 방법
+2. 연관관계에 대한 정의는 하지 않고, common 에서 같이 사용하는 방법
+
+이 중 2번째 방법을 선택!
+
+⭐ 해결
+
+1. product 관련 코드들을 common 모듈 내로 이동시킴
+2. ProductEntity 내에 정의되어 있던 Seller와의 연관관계를 수정
+    - SellerEntity의 seller key를 통해 join 시키던 관계를 대신하여 seller key를 String으로 수정
+
+```java
+
+@Column(nullable = false)
+private String sellerKey;
+```
+
 ### customer-api : 회원가입 시 401 Unauthorized가 뜨는 오류
 
 SecurityConfig의 authenticationFilter가 제대로 주입되지 않는다는 문구를 확인
