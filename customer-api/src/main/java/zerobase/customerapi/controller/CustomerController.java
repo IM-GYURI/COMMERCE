@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import zerobase.customerapi.dto.customer.CustomerDto;
 import zerobase.customerapi.dto.customer.CustomerEditDto;
+import zerobase.customerapi.dto.customer.CustomerPointDto;
 import zerobase.customerapi.dto.customer.CustomerSignInDto;
 import zerobase.customerapi.dto.customer.CustomerSignUpDto;
 import zerobase.customerapi.security.CustomerTokenProvider;
@@ -73,7 +74,8 @@ public class CustomerController {
     Authentication authentication = customerTokenProvider.getAuthentication(token);
     String email = authentication.getName();
 
-    CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey, email);
+    CustomerDto customerDto = customerService.validateAuthorizationAndGetCustomer(customerKey,
+        email);
 
     return ResponseEntity.ok(customerDto);
   }
@@ -97,7 +99,8 @@ public class CustomerController {
     Authentication authentication = customerTokenProvider.getAuthentication(token);
     String email = authentication.getName();
 
-    CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey, email);
+    CustomerDto customerDto = customerService.validateAuthorizationAndGetCustomer(customerKey,
+        email);
 
     customerDto = customerService.edit(customerEditDto);
 
@@ -122,10 +125,30 @@ public class CustomerController {
     Authentication authentication = customerTokenProvider.getAuthentication(token);
     String email = authentication.getName();
 
-    CustomerDto customerDto = customerService.validateAuthorizationAndGetSeller(customerKey, email);
+    CustomerDto customerDto = customerService.validateAuthorizationAndGetCustomer(customerKey,
+        email);
 
     customerKey = customerService.delete(customerKey);
 
     return ResponseEntity.ok("delete " + customerKey);
+  }
+
+  @PreAuthorize("hasRole('CUSTOMER')")
+  @PatchMapping("/point/{customerKey}")
+  public ResponseEntity<?> rechargePoint(@PathVariable String customerKey,
+      @RequestHeader("Authorization") String token,
+      @RequestBody CustomerPointDto customerPointDto) {
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+    }
+
+    Authentication authentication = customerTokenProvider.getAuthentication(token);
+    String email = authentication.getName();
+
+    CustomerDto customerDto = customerService.validateAuthorizationAndGetCustomer(customerKey,
+        email);
+
+    return ResponseEntity.ok(
+        customerService.rechargePoint(customerKey, customerPointDto.getPoint()));
   }
 }
