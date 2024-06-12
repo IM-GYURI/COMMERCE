@@ -27,6 +27,7 @@ import zerobase.customerapi.repository.CustomerRepository;
 public class CustomerService {
 
   private final CustomerRepository customerRepository;
+  private final CartService cartService;
   private final PasswordEncoder passwordEncoder;
   private final KeyGenerator keyGenerator;
   private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -44,6 +45,8 @@ public class CustomerService {
             passwordEncoder.encode(signUpDto.getPassword())
         )
     );
+
+    cartService.cartRegister(savedCustomer.getCustomerKey());
 
     return CustomerDto.fromEntity(savedCustomer);
   }
