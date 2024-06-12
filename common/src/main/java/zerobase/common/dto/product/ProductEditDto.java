@@ -10,7 +10,7 @@ import zerobase.common.type.Category;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EditDto {
+public class ProductEditDto {
 
   private String productKey;
   private String sellerKey;
