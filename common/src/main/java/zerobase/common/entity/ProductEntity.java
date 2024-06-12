@@ -15,11 +15,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import zerobase.common.dto.product.EditDto;
+import zerobase.common.dto.product.ProductEditDto;
 import zerobase.common.type.Category;
 
 /**
- * 상품 엔티티 : 아이디, 상품 키, 판매자 키(FK),이름, 카테고리, 가격, 재고, 설명
+ * 상품 엔티티 : 아이디, 상품 키, 판매자 키,이름, 카테고리, 가격, 재고, 설명
  */
 @Getter
 @NoArgsConstructor
@@ -73,12 +73,12 @@ public class ProductEntity extends BaseEntity implements UserDetails {
     this.sellerKey = sellerKey;
   }
 
-  public void updateProduct(EditDto editDto) {
-    this.name = editDto.getName();
-    this.category = editDto.getCategory();
-    this.price = editDto.getPrice();
-    this.stock = editDto.getStock();
-    this.description = editDto.getDescription();
+  public void updateProduct(ProductEditDto productEditDto) {
+    this.name = productEditDto.getName();
+    this.category = productEditDto.getCategory();
+    this.price = productEditDto.getPrice();
+    this.stock = productEditDto.getStock();
+    this.description = productEditDto.getDescription();
   }
 
   @Override
