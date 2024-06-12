@@ -15,11 +15,11 @@ import zerobase.common.exception.CommonCustomException;
 import zerobase.common.util.KeyGenerator;
 import zerobase.customerapi.dto.customer.CustomerDto;
 import zerobase.customerapi.dto.customer.CustomerEditDto;
+import zerobase.customerapi.dto.customer.CustomerPointDto;
 import zerobase.customerapi.dto.customer.CustomerSignInDto;
 import zerobase.customerapi.dto.customer.CustomerSignUpDto;
 import zerobase.customerapi.entity.CustomerEntity;
 import zerobase.customerapi.repository.CustomerRepository;
-import zerobase.customerapi.security.CustomerTokenProvider;
 
 
 @Service
@@ -29,7 +29,6 @@ public class CustomerService {
   private final CustomerRepository customerRepository;
   private final PasswordEncoder passwordEncoder;
   private final KeyGenerator keyGenerator;
-  private final CustomerTokenProvider customerTokenProvider;
   private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
   /**
@@ -97,7 +96,7 @@ public class CustomerService {
     }
   }
 
-  public CustomerDto validateAuthorizationAndGetSeller(String customerKey, String email) {
+  public CustomerDto validateAuthorizationAndGetCustomer(String customerKey, String email) {
     CustomerDto customerDto = findByEmail(email);
     String keyOfCustomer = customerDto.getCustomerKey();
 
@@ -106,5 +105,18 @@ public class CustomerService {
     }
 
     return customerDto;
+  }
+
+  @Transactional
+  public CustomerPointDto rechargePoint(String customerKey, Long point) {
+    CustomerEntity customer = customerRepository.findByCustomerKey(customerKey)
+        .orElseThrow(() -> new CommonCustomException(CUSTOMER_NOT_FOUND));
+
+    customer.updatePoint(point);
+
+    return CustomerPointDto.builder()
+        .customerKey(customerKey)
+        .point(customer.getPoint())
+        .build();
   }
 }
