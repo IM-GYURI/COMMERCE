@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zerobase.common.dto.product.ProductDto;
@@ -15,6 +16,7 @@ import zerobase.common.dto.product.ProductListDto;
 import zerobase.common.entity.ProductEntity;
 import zerobase.common.exception.CommonCustomException;
 import zerobase.common.repository.ProductRepository;
+import zerobase.common.type.Category;
 
 @Service
 @RequiredArgsConstructor
@@ -50,9 +52,9 @@ public class CustomerProductService {
    * @return
    */
   public List<ProductListDto> getAllSortedProductListByName() {
-    List<ProductEntity> productList = productRepository.findAll();
+    Pageable limit = PageRequest.of(0, 20, Sort.by("name"));
 
-    return productList.stream()
+    return productRepository.findAll(limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getName))
         .map(productEntity -> new ProductListDto(productEntity.getName(),
             productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
@@ -65,9 +67,9 @@ public class CustomerProductService {
    * @return
    */
   public List<ProductListDto> getAllSortedProductListByPriceAsc() {
-    List<ProductEntity> productList = productRepository.findAll();
+    Pageable limit = PageRequest.of(0, 20, Sort.by("price"));
 
-    return productList.stream()
+    return productRepository.findAll(limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getPrice))
         .map(productEntity -> new ProductListDto(productEntity.getName(),
             productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
@@ -80,9 +82,9 @@ public class CustomerProductService {
    * @return
    */
   public List<ProductListDto> getAllSortedProductListByPriceDesc() {
-    List<ProductEntity> productList = productRepository.findAll();
+    Pageable limit = PageRequest.of(0, 20, Sort.by("price"));
 
-    return productList.stream()
+    return productRepository.findAll(limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getPrice).reversed())
         .map(productEntity -> new ProductListDto(productEntity.getName(),
             productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
@@ -97,6 +99,7 @@ public class CustomerProductService {
    */
   public List<ProductListDto> searchByKeyword(String keyword) {
     Pageable limit = PageRequest.of(0, 20);
+
     return productRepository.findAllByNameContains(keyword, limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getName))
         .map(productEntity -> new ProductListDto(productEntity.getName(),
@@ -112,6 +115,7 @@ public class CustomerProductService {
    */
   public List<ProductListDto> searchByKeywordSortedByPriceAsc(String keyword) {
     Pageable limit = PageRequest.of(0, 20);
+
     return productRepository.findAllByNameContains(keyword, limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getPrice))
         .map(productEntity -> new ProductListDto(productEntity.getName(),
@@ -127,7 +131,56 @@ public class CustomerProductService {
    */
   public List<ProductListDto> searchByKeywordSortedByPriceDesc(String keyword) {
     Pageable limit = PageRequest.of(0, 20);
+
     return productRepository.findAllByNameContains(keyword, limit).stream()
+        .sorted(Comparator.comparing(ProductEntity::getPrice).reversed())
+        .map(productEntity -> new ProductListDto(productEntity.getName(),
+            productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * 카테고리 검색 : 가나다순
+   *
+   * @param category
+   * @return
+   */
+  public List<ProductListDto> searchByCategorySortedByName(Category category) {
+    Pageable limit = PageRequest.of(0, 20);
+
+    return productRepository.findAllByCategory(category, limit).stream()
+        .sorted(Comparator.comparing(ProductEntity::getName))
+        .map(productEntity -> new ProductListDto(productEntity.getName(),
+            productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * 카테고리 검색 : 낮은 가격순
+   *
+   * @param category
+   * @return
+   */
+  public List<ProductListDto> searchByCategorySortedByPriceAsc(Category category) {
+    Pageable limit = PageRequest.of(0, 20);
+
+    return productRepository.findAllByCategory(category, limit).stream()
+        .sorted(Comparator.comparing(ProductEntity::getPrice))
+        .map(productEntity -> new ProductListDto(productEntity.getName(),
+            productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * 카테고리 검색 : 높은 가격순
+   *
+   * @param category
+   * @return
+   */
+  public List<ProductListDto> searchByCategorySortedByPriceDesc(Category category) {
+    Pageable limit = PageRequest.of(0, 20);
+
+    return productRepository.findAllByCategory(category, limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getPrice).reversed())
         .map(productEntity -> new ProductListDto(productEntity.getName(),
             productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
