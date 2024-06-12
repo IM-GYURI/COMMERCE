@@ -121,4 +121,8 @@ public class CustomerEntity extends BaseEntity implements UserDetails {
     this.address = customerEditDto.getAddress();
     this.birth = customerEditDto.getBirth();
   }
+
+  public void updatePoint(Long point) {
+    this.point += point;
+  }
 }
