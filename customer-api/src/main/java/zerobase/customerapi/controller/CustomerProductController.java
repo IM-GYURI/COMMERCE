@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import zerobase.common.dto.product.ProductListDto;
+import zerobase.common.type.Category;
 import zerobase.customerapi.service.CustomerProductService;
 
 @RequestMapping("/product")
@@ -34,7 +35,7 @@ public class CustomerProductController {
    *
    * @return
    */
-  @GetMapping("/sorted-by-name")
+  @GetMapping("/name")
   public ResponseEntity<?> sortedByName() {
     List<ProductListDto> productList = customerProductService.getAllSortedProductListByName();
 
@@ -44,7 +45,7 @@ public class CustomerProductController {
   /**
    * 상품 전체 조회 : 낮은 가격순
    */
-  @GetMapping("/sorted-by-price-asc")
+  @GetMapping("/price-asc")
   public ResponseEntity<?> sortedByPriceAsc() {
     List<ProductListDto> productList = customerProductService.getAllSortedProductListByPriceAsc();
 
@@ -54,7 +55,7 @@ public class CustomerProductController {
   /**
    * 상품 전체 조회 : 높은 가격순
    */
-  @GetMapping("/sorted-by-price-desc")
+  @GetMapping("/price-desc")
   public ResponseEntity<?> sortedByPriceDesc() {
     List<ProductListDto> productList = customerProductService.getAllSortedProductListByPriceDesc();
 
@@ -67,7 +68,7 @@ public class CustomerProductController {
    * @param keyword
    * @return
    */
-  @GetMapping("/search-sorted-by-name")
+  @GetMapping("/search/name")
   public ResponseEntity<?> searchByKeyword(@RequestParam String keyword) {
     return ResponseEntity.ok(customerProductService.searchByKeyword(keyword));
   }
@@ -78,7 +79,7 @@ public class CustomerProductController {
    * @param keyword
    * @return
    */
-  @GetMapping("/search-sorted-by-price-asc")
+  @GetMapping("/search/price-asc")
   public ResponseEntity<?> searchByKeywordSortedByPriceAsc(@RequestParam String keyword) {
     return ResponseEntity.ok(customerProductService.searchByKeywordSortedByPriceAsc(keyword));
   }
@@ -89,8 +90,29 @@ public class CustomerProductController {
    * @param keyword
    * @return
    */
-  @GetMapping("/search-sorted-by-price-desc")
+  @GetMapping("/search/price-desc")
   public ResponseEntity<?> searchByKeywordSortedByPriceDesc(@RequestParam String keyword) {
     return ResponseEntity.ok(customerProductService.searchByKeywordSortedByPriceDesc(keyword));
+  }
+
+  /**
+   * 카테고리 검색 : 가나다순
+   *
+   * @param category
+   * @return
+   */
+  @GetMapping("/search/category/name")
+  public ResponseEntity<?> searchByCategorySortedByName(@RequestParam Category category) {
+    return ResponseEntity.ok(customerProductService.searchByCategorySortedByName(category));
+  }
+
+  @GetMapping("/search/category/price-asc")
+  public ResponseEntity<?> searchByCategorySortedByPriceAsc(@RequestParam Category category) {
+    return ResponseEntity.ok(customerProductService.searchByCategorySortedByPriceAsc(category));
+  }
+
+  @GetMapping("/search/category/price-desc")
+  public ResponseEntity<?> searchByCategorySortedByPriceDesc(@RequestParam Category category) {
+    return ResponseEntity.ok(customerProductService.searchByCategorySortedByPriceDesc(category));
   }
 }
