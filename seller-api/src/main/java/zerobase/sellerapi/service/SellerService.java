@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zerobase.common.exception.CommonCustomException;
 import zerobase.common.util.KeyGenerator;
-import zerobase.sellerapi.dto.seller.EditDto;
 import zerobase.sellerapi.dto.seller.SellerDto;
+import zerobase.sellerapi.dto.seller.SellerEditDto;
 import zerobase.sellerapi.dto.seller.SellerSignInDto;
 import zerobase.sellerapi.dto.seller.SellerSignUpDto;
 import zerobase.sellerapi.entity.SellerEntity;
 import zerobase.sellerapi.repository.SellerRepository;
-import zerobase.sellerapi.security.TokenProvider;
+import zerobase.sellerapi.security.SellerTokenProvider;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class SellerService {
   private final SellerRepository sellerRepository;
   private final PasswordEncoder passwordEncoder;
   private final KeyGenerator keyGenerator;
-  private final TokenProvider tokenProvider;
+  private final SellerTokenProvider sellerTokenProvider;
   private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
   /**
@@ -72,11 +72,11 @@ public class SellerService {
   }
 
   @Transactional
-  public SellerDto edit(EditDto editDto) {
-    SellerEntity seller = sellerRepository.findBySellerKey(editDto.getSellerKey())
+  public SellerDto edit(SellerEditDto sellerEditDto) {
+    SellerEntity seller = sellerRepository.findBySellerKey(sellerEditDto.getSellerKey())
         .orElseThrow(() -> new CommonCustomException(SELLER_NOT_FOUND));
 
-    seller.updateSeller(editDto);
+    seller.updateSeller(sellerEditDto);
 
     return SellerDto.fromEntity(seller);
   }

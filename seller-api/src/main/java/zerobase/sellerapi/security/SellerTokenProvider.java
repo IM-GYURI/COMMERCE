@@ -25,7 +25,7 @@ import zerobase.sellerapi.dto.seller.SellerDto;
  */
 @RequiredArgsConstructor
 @Component
-public class TokenProvider {
+public class SellerTokenProvider {
 
   @Value("${spring.jwt.secret}")
   private String key;

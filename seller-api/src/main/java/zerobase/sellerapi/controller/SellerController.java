@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import zerobase.sellerapi.dto.seller.EditDto;
 import zerobase.sellerapi.dto.seller.SellerDto;
+import zerobase.sellerapi.dto.seller.SellerEditDto;
 import zerobase.sellerapi.dto.seller.SellerSignInDto;
 import zerobase.sellerapi.dto.seller.SellerSignUpDto;
-import zerobase.sellerapi.security.TokenProvider;
+import zerobase.sellerapi.security.SellerTokenProvider;
 import zerobase.sellerapi.service.SellerService;
 
 @RequestMapping("/seller")
@@ -28,7 +28,7 @@ import zerobase.sellerapi.service.SellerService;
 public class SellerController {
 
   private final SellerService sellerService;
-  private final TokenProvider tokenProvider;
+  private final SellerTokenProvider sellerTokenProvider;
 
   /**
    * 회원 가입
@@ -44,7 +44,7 @@ public class SellerController {
   @PostMapping("/signin")
   public ResponseEntity<?> signIn(@RequestBody @Valid SellerSignInDto signInDto) {
     SellerDto sellerDto = sellerService.signIn(signInDto);
-    String token = tokenProvider.generateTokenBySeller(sellerDto);
+    String token = sellerTokenProvider.generateTokenBySeller(sellerDto);
 
     HttpHeaders headers = new HttpHeaders();
     headers.set(HttpHeaders.AUTHORIZATION, token);
@@ -67,7 +67,7 @@ public class SellerController {
       token = token.substring(7);
     }
 
-    Authentication authentication = tokenProvider.getAuthentication(token);
+    Authentication authentication = sellerTokenProvider.getAuthentication(token);
     String email = authentication.getName();
 
     SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, email);
@@ -80,23 +80,24 @@ public class SellerController {
    *
    * @param sellerKey
    * @param token
-   * @param editDto
+   * @param sellerEditDto
    * @return
    */
   @PreAuthorize("hasRole('SELLER')")
   @PatchMapping("/{sellerKey}")
   public ResponseEntity<?> editSellerInformation(@PathVariable String sellerKey,
-      @RequestHeader("Authorization") String token, @RequestBody @Valid EditDto editDto) {
+      @RequestHeader("Authorization") String token,
+      @RequestBody @Valid SellerEditDto sellerEditDto) {
     if (token != null && token.startsWith("Bearer ")) {
       token = token.substring(7);
     }
 
-    Authentication authentication = tokenProvider.getAuthentication(token);
+    Authentication authentication = sellerTokenProvider.getAuthentication(token);
     String email = authentication.getName();
 
     SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, email);
 
-    sellerDto = sellerService.edit(editDto);
+    sellerDto = sellerService.edit(sellerEditDto);
 
     return ResponseEntity.ok(sellerDto);
   }
@@ -116,7 +117,7 @@ public class SellerController {
       token = token.substring(7);
     }
 
-    Authentication authentication = tokenProvider.getAuthentication(token);
+    Authentication authentication = sellerTokenProvider.getAuthentication(token);
     String email = authentication.getName();
 
     SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, email);

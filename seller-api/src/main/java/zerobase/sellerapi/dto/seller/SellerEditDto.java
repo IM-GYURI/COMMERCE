@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EditDto {
+public class SellerEditDto {
 
   private String sellerKey;
   private String name;

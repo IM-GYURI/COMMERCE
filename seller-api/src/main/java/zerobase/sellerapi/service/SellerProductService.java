@@ -15,7 +15,7 @@ import zerobase.common.exception.CommonCustomException;
 import zerobase.common.repository.ProductRepository;
 import zerobase.common.util.KeyGenerator;
 import zerobase.sellerapi.entity.SellerEntity;
-import zerobase.sellerapi.security.TokenProvider;
+import zerobase.sellerapi.security.SellerTokenProvider;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class SellerProductService {
 
   private final ProductRepository productRepository;
   private final SellerService sellerService;
-  private final TokenProvider tokenProvider;
+  private final SellerTokenProvider sellerTokenProvider;
 
   /**
    * 매장 등록 : 판매자 키를 통해 판매자 정보를 찾은 후 매장 등록
@@ -60,7 +60,7 @@ public class SellerProductService {
       token = token.substring(7);
     }
 
-    Authentication authentication = tokenProvider.getAuthentication(token);
+    Authentication authentication = sellerTokenProvider.getAuthentication(token);
     String email = authentication.getName();
 
     ProductEntity product = findByProductKeyOrThrow(productKey);

@@ -21,7 +21,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import zerobase.common.entity.BaseEntity;
 import zerobase.common.type.Role;
-import zerobase.sellerapi.dto.seller.EditDto;
+import zerobase.sellerapi.dto.seller.SellerEditDto;
 
 /**
  * 판매자 엔티티 : 아이디, 판매자 키, 이메일, 비밀번호, 이름, 전화번호, 주소, 역할
@@ -105,9 +105,9 @@ public class SellerEntity extends BaseEntity implements UserDetails {
     return true;
   }
 
-  public void updateSeller(EditDto editDto) {
-    this.name = editDto.getName();
-    this.phone = editDto.getPhone();
-    this.address = editDto.getAddress();
+  public void updateSeller(SellerEditDto sellerEditDto) {
+    this.name = sellerEditDto.getName();
+    this.phone = sellerEditDto.getPhone();
+    this.address = sellerEditDto.getAddress();
   }
 }

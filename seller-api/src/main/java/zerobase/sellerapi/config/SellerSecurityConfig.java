@@ -16,15 +16,15 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import zerobase.common.security.CustomAccessDeniedHandler;
 import zerobase.common.security.CustomAuthenticationEntryPoint;
-import zerobase.sellerapi.security.AuthenticationFilter;
+import zerobase.sellerapi.security.SellerAuthenticationFilter;
 
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class SellerSecurityConfig {
 
-  private final AuthenticationFilter authenticationFilter;
+  private final SellerAuthenticationFilter sellerAuthenticationFilter;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,7 +43,7 @@ public class SecurityConfig {
                 ).permitAll()
                 .anyRequest().authenticated()
         )
-        .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(sellerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling((exceptions) -> exceptions
             .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
             .accessDeniedHandler(new CustomAccessDeniedHandler()));

@@ -14,7 +14,7 @@ import zerobase.sellerapi.repository.SellerRepository;
  */
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class SellerCustomUserDetailsService implements UserDetailsService {
 
   private final SellerRepository sellerRepository;
 
