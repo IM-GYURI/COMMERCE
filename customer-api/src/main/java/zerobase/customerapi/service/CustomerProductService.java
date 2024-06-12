@@ -90,15 +90,45 @@ public class CustomerProductService {
   }
 
   /**
-   * 상품 검색 : 키워드를 통한 상품명 검색
+   * 상품 검색 : 가나다순
    *
    * @param keyword
    * @return
    */
   public List<ProductListDto> searchByKeyword(String keyword) {
     Pageable limit = PageRequest.of(0, 20);
-    return productRepository.findAllByNameContains(keyword, limit)
-        .stream()
+    return productRepository.findAllByNameContains(keyword, limit).stream()
+        .sorted(Comparator.comparing(ProductEntity::getName))
+        .map(productEntity -> new ProductListDto(productEntity.getName(),
+            productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * 상품 검색 : 낮은 가격순
+   *
+   * @param keyword
+   * @return
+   */
+  public List<ProductListDto> searchByKeywordSortedByPriceAsc(String keyword) {
+    Pageable limit = PageRequest.of(0, 20);
+    return productRepository.findAllByNameContains(keyword, limit).stream()
+        .sorted(Comparator.comparing(ProductEntity::getPrice))
+        .map(productEntity -> new ProductListDto(productEntity.getName(),
+            productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * 상품 검색 : 높은 가격순
+   *
+   * @param keyword
+   * @return
+   */
+  public List<ProductListDto> searchByKeywordSortedByPriceDesc(String keyword) {
+    Pageable limit = PageRequest.of(0, 20);
+    return productRepository.findAllByNameContains(keyword, limit).stream()
+        .sorted(Comparator.comparing(ProductEntity::getPrice).reversed())
         .map(productEntity -> new ProductListDto(productEntity.getName(),
             productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
         .collect(Collectors.toList());

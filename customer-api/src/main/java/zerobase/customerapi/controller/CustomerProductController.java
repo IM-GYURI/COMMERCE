@@ -52,7 +52,7 @@ public class CustomerProductController {
   }
 
   /**
-   * 상품 전체 조회 : 낮은 가격순
+   * 상품 전체 조회 : 높은 가격순
    */
   @GetMapping("/sorted-by-price-desc")
   public ResponseEntity<?> sortedByPriceDesc() {
@@ -61,8 +61,36 @@ public class CustomerProductController {
     return ResponseEntity.ok(productList);
   }
 
-  @GetMapping("/search")
+  /**
+   * 상품 검색 : 가나다순
+   *
+   * @param keyword
+   * @return
+   */
+  @GetMapping("/search-sorted-by-name")
   public ResponseEntity<?> searchByKeyword(@RequestParam String keyword) {
     return ResponseEntity.ok(customerProductService.searchByKeyword(keyword));
+  }
+
+  /**
+   * 상품 검색 : 낮은 가격순
+   *
+   * @param keyword
+   * @return
+   */
+  @GetMapping("/search-sorted-by-price-asc")
+  public ResponseEntity<?> searchByKeywordSortedByPriceAsc(@RequestParam String keyword) {
+    return ResponseEntity.ok(customerProductService.searchByKeywordSortedByPriceAsc(keyword));
+  }
+
+  /**
+   * 상품 검색 : 높은 가격순
+   *
+   * @param keyword
+   * @return
+   */
+  @GetMapping("/search-sorted-by-price-desc")
+  public ResponseEntity<?> searchByKeywordSortedByPriceDesc(@RequestParam String keyword) {
+    return ResponseEntity.ok(customerProductService.searchByKeywordSortedByPriceDesc(keyword));
   }
 }
