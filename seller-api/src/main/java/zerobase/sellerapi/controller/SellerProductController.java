@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import zerobase.common.dto.product.EditDto;
 import zerobase.common.dto.product.ProductDto;
+import zerobase.common.dto.product.ProductEditDto;
 import zerobase.common.dto.product.RegistrationDto;
 import zerobase.sellerapi.service.SellerProductService;
 
@@ -42,17 +42,18 @@ public class SellerProductController {
   /**
    * 상품 정보 수정 : SELLER 본인만 가능
    *
-   * @param editDto
+   * @param productEditDto
    * @return
    */
   @PreAuthorize("hasRole('SELLER')")
   @PatchMapping("/{productKey}")
   public ResponseEntity<?> editProductInformation(@PathVariable String productKey,
-      @RequestHeader("Authorization") String token, @RequestBody @Valid EditDto editDto) {
+      @RequestHeader("Authorization") String token,
+      @RequestBody @Valid ProductEditDto productEditDto) {
     ProductDto productDto = sellerProductService.validateAuthorizationAndGetSeller(productKey,
         token);
 
-    return ResponseEntity.ok(sellerProductService.edit(editDto));
+    return ResponseEntity.ok(sellerProductService.edit(productEditDto));
   }
 
   @PreAuthorize("hasRole('SELLER')")

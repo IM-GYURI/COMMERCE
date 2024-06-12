@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import zerobase.common.dto.product.EditDto;
 import zerobase.common.dto.product.ProductDto;
+import zerobase.common.dto.product.ProductEditDto;
 import zerobase.common.dto.product.RegistrationDto;
 import zerobase.common.entity.ProductEntity;
 import zerobase.common.exception.CommonCustomException;
@@ -42,10 +42,10 @@ public class SellerProductService {
   }
 
   @Transactional
-  public ProductDto edit(EditDto editDto) {
-    ProductEntity product = findByProductKeyOrThrow(editDto.getProductKey());
+  public ProductDto edit(ProductEditDto productEditDto) {
+    ProductEntity product = findByProductKeyOrThrow(productEditDto.getProductKey());
 
-    product.updateProduct(editDto);
+    product.updateProduct(productEditDto);
 
     return ProductDto.fromEntity(product);
   }
