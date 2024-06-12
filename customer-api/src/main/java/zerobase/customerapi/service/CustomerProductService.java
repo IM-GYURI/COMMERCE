@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zerobase.common.dto.product.ProductDto;
@@ -52,6 +54,51 @@ public class CustomerProductService {
 
     return productList.stream()
         .sorted(Comparator.comparing(ProductEntity::getName))
+        .map(productEntity -> new ProductListDto(productEntity.getName(),
+            productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * 상품 전체 조회 : 낮은 가격순
+   *
+   * @return
+   */
+  public List<ProductListDto> getAllSortedProductListByPriceAsc() {
+    List<ProductEntity> productList = productRepository.findAll();
+
+    return productList.stream()
+        .sorted(Comparator.comparing(ProductEntity::getPrice))
+        .map(productEntity -> new ProductListDto(productEntity.getName(),
+            productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * 상품 전체 조회 : 높은 가격순
+   *
+   * @return
+   */
+  public List<ProductListDto> getAllSortedProductListByPriceDesc() {
+    List<ProductEntity> productList = productRepository.findAll();
+
+    return productList.stream()
+        .sorted(Comparator.comparing(ProductEntity::getPrice).reversed())
+        .map(productEntity -> new ProductListDto(productEntity.getName(),
+            productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * 상품 검색 : 키워드를 통한 상품명 검색
+   *
+   * @param keyword
+   * @return
+   */
+  public List<ProductListDto> searchByKeyword(String keyword) {
+    Pageable limit = PageRequest.of(0, 20);
+    return productRepository.findAllByNameContains(keyword, limit)
+        .stream()
         .map(productEntity -> new ProductListDto(productEntity.getName(),
             productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
         .collect(Collectors.toList());

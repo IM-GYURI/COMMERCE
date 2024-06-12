@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import zerobase.common.dto.product.ProductListDto;
 import zerobase.customerapi.service.CustomerProductService;
@@ -38,5 +39,30 @@ public class CustomerProductController {
     List<ProductListDto> productList = customerProductService.getAllSortedProductListByName();
 
     return ResponseEntity.ok(productList);
+  }
+
+  /**
+   * 상품 전체 조회 : 낮은 가격순
+   */
+  @GetMapping("/sorted-by-price-asc")
+  public ResponseEntity<?> sortedByPriceAsc() {
+    List<ProductListDto> productList = customerProductService.getAllSortedProductListByPriceAsc();
+
+    return ResponseEntity.ok(productList);
+  }
+
+  /**
+   * 상품 전체 조회 : 낮은 가격순
+   */
+  @GetMapping("/sorted-by-price-desc")
+  public ResponseEntity<?> sortedByPriceDesc() {
+    List<ProductListDto> productList = customerProductService.getAllSortedProductListByPriceDesc();
+
+    return ResponseEntity.ok(productList);
+  }
+
+  @GetMapping("/search")
+  public ResponseEntity<?> searchByKeyword(@RequestParam String keyword) {
+    return ResponseEntity.ok(customerProductService.searchByKeyword(keyword));
   }
 }
