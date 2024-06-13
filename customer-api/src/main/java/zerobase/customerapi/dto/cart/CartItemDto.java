@@ -12,8 +12,6 @@ import zerobase.customerapi.entity.CartItemEntity;
 @AllArgsConstructor
 public class CartItemDto {
 
-  private Long cartId;
-
   private String productKey;
 
   private Long price;
@@ -22,7 +20,6 @@ public class CartItemDto {
 
   public static CartItemDto fromEntity(CartItemEntity cartItemEntity) {
     return CartItemDto.builder()
-        .cartId(cartItemEntity.getCart().getId())
         .productKey(cartItemEntity.getProductKey())
         .price(cartItemEntity.getPrice())
         .count(cartItemEntity.getCount())
