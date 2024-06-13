@@ -8,11 +8,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import zerobase.common.exception.CommonCustomException;
-import zerobase.customerapi.dto.cart.CartDto;
+import zerobase.customerapi.dto.cart.CartItemRegisterDto;
+import zerobase.customerapi.dto.cart.CartWithTotalDto;
 import zerobase.customerapi.dto.customer.CustomerDto;
 import zerobase.customerapi.entity.CartEntity;
 import zerobase.customerapi.repository.CartRepository;
@@ -50,6 +53,26 @@ public class CartController {
     CartEntity cartEntity = cartRepository.findByCustomerKey(customerKey)
         .orElseThrow(() -> new CommonCustomException(CART_NOT_FOUND));
 
-    return ResponseEntity.ok(CartDto.fromEntity(cartEntity));
+    return ResponseEntity.ok(CartWithTotalDto.fromEntity(cartEntity));
+  }
+
+  @PreAuthorize("hasRole('CUSTOMER')")
+  @PostMapping("/add-product/{customerKey}")
+  public ResponseEntity<?> addProductToCart(@PathVariable String customerKey,
+      @RequestHeader("Authorization") String token,
+      @RequestBody CartItemRegisterDto cartItemRegisterDto) {
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+    }
+
+    Authentication authentication = customerTokenProvider.getAuthentication(token);
+    String email = authentication.getName();
+
+    CustomerDto customerDto = customerService.validateAuthorizationAndGetCustomer(customerKey,
+        email);
+
+    cartService.addProductToCart(customerKey, cartItemRegisterDto);
+
+    return ResponseEntity.ok(cartService.getCartByCustomerKey(customerKey));
   }
 }
