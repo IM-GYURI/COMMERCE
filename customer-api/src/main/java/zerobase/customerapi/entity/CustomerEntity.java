@@ -135,4 +135,8 @@ public class CustomerEntity extends BaseEntity implements UserDetails {
   public void plusPoint(Long point) {
     this.point += point;
   }
+
+  public void minusPoint(Long point) {
+    this.point -= point;
+  }
 }
