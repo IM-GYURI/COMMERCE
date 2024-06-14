@@ -30,7 +30,6 @@ public class SellerProductController {
    * @param registrationDto
    * @return
    */
-
   @PreAuthorize("hasRole('SELLER')")
   @PostMapping("/registration")
   public ResponseEntity<?> registration(@RequestBody @Valid RegistrationDto registrationDto) {
@@ -56,6 +55,13 @@ public class SellerProductController {
     return ResponseEntity.ok(sellerProductService.edit(productEditDto));
   }
 
+  /**
+   * 상품 삭제 : SELLER 본인만 가능
+   *
+   * @param productKey
+   * @param token
+   * @return
+   */
   @PreAuthorize("hasRole('SELLER')")
   @DeleteMapping("/{productKey}")
   public ResponseEntity<?> deleteProduct(@PathVariable String productKey,
