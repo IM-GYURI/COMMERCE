@@ -115,6 +115,11 @@ public class CustomerEntity extends BaseEntity implements UserDetails {
     return true;
   }
 
+  /**
+   * 고객 정보 수정 기능
+   *
+   * @param customerEditDto
+   */
   public void updateCustomer(CustomerEditDto customerEditDto) {
     this.name = customerEditDto.getName();
     this.phone = customerEditDto.getPhone();
@@ -122,7 +127,12 @@ public class CustomerEntity extends BaseEntity implements UserDetails {
     this.birth = customerEditDto.getBirth();
   }
 
-  public void updatePoint(Long point) {
+  /**
+   * 포인트 충전 기능
+   *
+   * @param point
+   */
+  public void plusPoint(Long point) {
     this.point += point;
   }
 }

@@ -51,12 +51,6 @@ public class CustomerService {
     return CustomerDto.fromEntity(savedCustomer);
   }
 
-  private void validateCustomerExistsByEmail(String email) {
-    if (customerRepository.existsByEmail(email)) {
-      throw new CommonCustomException(CUSTOMER_ALREADY_EXISTS);
-    }
-  }
-
   /**
    * 로그인 : 로그인 요청 정보를 spring security의 authenticate 메소드를 사용하여 검증
    */
@@ -69,11 +63,12 @@ public class CustomerService {
     return CustomerDto.fromEntity((CustomerEntity) authentication.getPrincipal());
   }
 
-  public CustomerDto findByEmail(String email) {
-    return CustomerDto.fromEntity(customerRepository.findByEmail(email)
-        .orElseThrow(() -> new CommonCustomException(CUSTOMER_NOT_FOUND)));
-  }
-
+  /**
+   * 고객 정보 수정
+   *
+   * @param customerEditDto
+   * @return
+   */
   @Transactional
   public CustomerDto edit(CustomerEditDto customerEditDto) {
     CustomerEntity customer = customerRepository.findByCustomerKey(customerEditDto.getCustomerKey())
@@ -84,6 +79,12 @@ public class CustomerService {
     return CustomerDto.fromEntity(customer);
   }
 
+  /**
+   * 회원 탈퇴
+   *
+   * @param customerKey
+   * @return
+   */
   @Transactional
   public String delete(String customerKey) {
     validateCustomerExistsByCustomerKey(customerKey);
@@ -93,12 +94,44 @@ public class CustomerService {
     return customerKey;
   }
 
+  /**
+   * 포인트 충전
+   *
+   * @param customerKey
+   * @param point
+   * @return
+   */
+  @Transactional
+  public CustomerPointDto chargePoint(String customerKey, Long point) {
+    CustomerEntity customer = customerRepository.findByCustomerKey(customerKey)
+        .orElseThrow(() -> new CommonCustomException(CUSTOMER_NOT_FOUND));
+
+    customer.plusPoint(point);
+
+    return CustomerPointDto.builder()
+        .customerKey(customerKey)
+        .point(customer.getPoint())
+        .build();
+  }
+
+  /**
+   * 고객 키를 통해 고객의 존재 여부를 확인
+   *
+   * @param customerKey
+   */
   private void validateCustomerExistsByCustomerKey(String customerKey) {
     if (!customerRepository.existsByCustomerKey(customerKey)) {
       throw new CommonCustomException(CUSTOMER_NOT_FOUND);
     }
   }
 
+  /**
+   * 고객 키를 통해 고객 본인인지 확인
+   *
+   * @param customerKey
+   * @param email
+   * @return
+   */
   public CustomerDto validateAuthorizationAndGetCustomer(String customerKey, String email) {
     CustomerDto customerDto = findByEmail(email);
     String keyOfCustomer = customerDto.getCustomerKey();
@@ -110,16 +143,25 @@ public class CustomerService {
     return customerDto;
   }
 
-  @Transactional
-  public CustomerPointDto rechargePoint(String customerKey, Long point) {
-    CustomerEntity customer = customerRepository.findByCustomerKey(customerKey)
-        .orElseThrow(() -> new CommonCustomException(CUSTOMER_NOT_FOUND));
+  /**
+   * 이메일을 통해 찾은 고객의 Dto를 반환
+   *
+   * @param email
+   * @return
+   */
+  public CustomerDto findByEmail(String email) {
+    return CustomerDto.fromEntity(customerRepository.findByEmail(email)
+        .orElseThrow(() -> new CommonCustomException(CUSTOMER_NOT_FOUND)));
+  }
 
-    customer.updatePoint(point);
-
-    return CustomerPointDto.builder()
-        .customerKey(customerKey)
-        .point(customer.getPoint())
-        .build();
+  /**
+   * 이메일을 통해 고객의 존재 여부를 확인
+   *
+   * @param email
+   */
+  private void validateCustomerExistsByEmail(String email) {
+    if (customerRepository.existsByEmail(email)) {
+      throw new CommonCustomException(CUSTOMER_ALREADY_EXISTS);
+    }
   }
 }

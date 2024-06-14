@@ -133,6 +133,14 @@ public class CustomerController {
     return ResponseEntity.ok("delete " + customerKey);
   }
 
+  /**
+   * 포인트 충전
+   *
+   * @param customerKey
+   * @param token
+   * @param customerPointDto
+   * @return
+   */
   @PreAuthorize("hasRole('CUSTOMER')")
   @PatchMapping("/point/{customerKey}")
   public ResponseEntity<?> rechargePoint(@PathVariable String customerKey,
@@ -149,6 +157,6 @@ public class CustomerController {
         email);
 
     return ResponseEntity.ok(
-        customerService.rechargePoint(customerKey, customerPointDto.getPoint()));
+        customerService.chargePoint(customerKey, customerPointDto.getPoint()));
   }
 }

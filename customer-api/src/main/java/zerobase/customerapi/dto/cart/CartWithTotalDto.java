@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import zerobase.customerapi.entity.CartEntity;
 
+/**
+ * 장바구니 조회 시 전체 가격을 함께 보여주기 위한 Dto
+ */
 @Getter
 @Builder
 @NoArgsConstructor
