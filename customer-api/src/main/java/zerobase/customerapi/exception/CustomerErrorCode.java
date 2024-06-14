@@ -14,6 +14,7 @@ public enum CustomerErrorCode implements ErrorCode {
   // Customer
   CUSTOMER_ALREADY_EXISTS(BAD_REQUEST, "이미 존재하는 고객입니다."),
   CUSTOMER_NOT_FOUND(NOT_FOUND, "고객을 찾을 수 없습니다."),
+  POINT_INVALID(BAD_REQUEST, "충전하는 포인트는 0원 이하일 수 없습니다."),
 
   // Cart
   CART_NOT_FOUND(NOT_FOUND, "해당 고객의 장바구니가 존재하지 않습니다."),
