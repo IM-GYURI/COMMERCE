@@ -1,5 +1,6 @@
 package zerobase.customerapi.service;
 
+import static zerobase.common.exception.CommonErrorCode.PRODUCT_NOT_FOUND;
 import static zerobase.customerapi.exception.CustomerErrorCode.CART_NOT_FOUND;
 import static zerobase.customerapi.exception.CustomerErrorCode.CUSTOMER_NOT_FOUND;
 import static zerobase.customerapi.exception.CustomerErrorCode.POINT_NOT_ENOUGH;
@@ -8,7 +9,9 @@ import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import zerobase.common.entity.ProductEntity;
 import zerobase.common.exception.CommonCustomException;
+import zerobase.common.repository.ProductRepository;
 import zerobase.customerapi.dto.order.OrderDto;
 import zerobase.customerapi.entity.CartEntity;
 import zerobase.customerapi.entity.CartItemEntity;
@@ -25,9 +28,22 @@ public class OrderService {
 
   private final CartRepository cartRepository;
   private final OrderRepository orderRepository;
+  private final ProductRepository productRepository;
   private final CartService cartService;
   private final CustomerRepository customerRepository;
 
+  /**
+   * 장바구니 전체를 주문 목록으로 보고 결제하는 기능
+   * <p>
+   * 결제해야하는 가격이 고객의 현재 포인트보다 크면 결제 불가
+   * <p>
+   * 상품을 주문한 수량만큼 재고를 감소시킴
+   * <p>
+   * 결제 후 장바구니 전체 비우기
+   *
+   * @param customerKey
+   * @return
+   */
   @Transactional
   public OrderDto makeOrder(String customerKey) {
     CartEntity cartEntity = cartRepository.findByCustomerKey(customerKey)
@@ -54,6 +70,13 @@ public class OrderService {
         .build();
 
     for (CartItemEntity cartItemEntity : cartEntity.getItems()) {
+      ProductEntity productEntity = productRepository.findByProductKey(
+              cartItemEntity.getProductKey())
+          .orElseThrow(() -> new CommonCustomException(PRODUCT_NOT_FOUND));
+
+      productEntity.decreaseStock(cartItemEntity.getCount());
+      productRepository.save(productEntity);
+
       OrderItemEntity orderItemEntity = OrderItemEntity.builder()
           .productKey(cartItemEntity.getProductKey())
           .price(cartItemEntity.getPrice())
