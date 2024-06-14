@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import zerobase.common.dto.product.ProductListDto;
+import zerobase.common.dto.ProductListDto;
 import zerobase.common.type.Category;
 import zerobase.customerapi.service.CustomerProductService;
 

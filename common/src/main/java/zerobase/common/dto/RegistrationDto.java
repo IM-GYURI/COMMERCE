@@ -1,4 +1,4 @@
-package zerobase.common.dto.product;
+package zerobase.common.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

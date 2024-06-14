@@ -1,4 +1,4 @@
-package zerobase.common.dto.product;
+package zerobase.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

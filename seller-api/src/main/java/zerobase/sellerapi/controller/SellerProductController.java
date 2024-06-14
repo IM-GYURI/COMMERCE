@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import zerobase.common.dto.product.ProductDto;
-import zerobase.common.dto.product.ProductEditDto;
-import zerobase.common.dto.product.RegistrationDto;
+import zerobase.common.dto.ProductDto;
+import zerobase.common.dto.ProductEditDto;
+import zerobase.common.dto.RegistrationDto;
 import zerobase.sellerapi.service.SellerProductService;
 
 @RequestMapping("/product")

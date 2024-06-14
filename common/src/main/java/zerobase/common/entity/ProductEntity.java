@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import zerobase.common.dto.product.ProductEditDto;
+import zerobase.common.dto.ProductEditDto;
 import zerobase.common.type.Category;
 
 /**
