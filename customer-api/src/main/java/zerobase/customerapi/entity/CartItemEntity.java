@@ -13,6 +13,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 장바구니 아이템 엔티티 : 아이디, 장바구니 아이디(FK), 상품 키, 가격, 수량
+ */
 @Getter
 @NoArgsConstructor
 @Table(indexes = {@Index(columnList = "cart_id")})
@@ -42,6 +45,6 @@ public class CartItemEntity {
   }
 
   public void updateCount(Long count) {
-    this.count += count;
+    this.count = count;
   }
 }

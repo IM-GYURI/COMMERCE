@@ -18,6 +18,12 @@ public class CartItemDto {
 
   private Long count;
 
+  /**
+   * CartItemEntity -> CartItemDto 변환
+   *
+   * @param cartItemEntity
+   * @return
+   */
   public static CartItemDto fromEntity(CartItemEntity cartItemEntity) {
     return CartItemDto.builder()
         .productKey(cartItemEntity.getProductKey())

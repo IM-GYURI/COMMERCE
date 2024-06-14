@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import zerobase.customerapi.entity.CartItemEntity;
 
+/**
+ * 장바구니에 상품을 추가하기 위한 Dto
+ */
 @Getter
 @Builder
 @NoArgsConstructor
