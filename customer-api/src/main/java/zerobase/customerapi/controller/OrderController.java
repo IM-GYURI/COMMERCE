@@ -51,6 +51,13 @@ public class OrderController {
     return ResponseEntity.ok(orderDto);
   }
 
+  /**
+   * 주문 내역 조회
+   *
+   * @param customerKey
+   * @param token
+   * @return
+   */
   @PreAuthorize("hasRole('CUSTOMER')")
   @GetMapping("/{customerKey}")
   public ResponseEntity<?> orderListInformation(@PathVariable String customerKey,
