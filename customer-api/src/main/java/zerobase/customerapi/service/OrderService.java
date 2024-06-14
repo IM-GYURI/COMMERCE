@@ -3,9 +3,12 @@ package zerobase.customerapi.service;
 import static zerobase.common.exception.CommonErrorCode.PRODUCT_NOT_FOUND;
 import static zerobase.customerapi.exception.CustomerErrorCode.CART_NOT_FOUND;
 import static zerobase.customerapi.exception.CustomerErrorCode.CUSTOMER_NOT_FOUND;
+import static zerobase.customerapi.exception.CustomerErrorCode.ORDER_NOT_EXISTS;
 import static zerobase.customerapi.exception.CustomerErrorCode.POINT_NOT_ENOUGH;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,6 +81,7 @@ public class OrderService {
       productRepository.save(productEntity);
 
       OrderItemEntity orderItemEntity = OrderItemEntity.builder()
+          .order(orderEntity)
           .productKey(cartItemEntity.getProductKey())
           .price(cartItemEntity.getPrice())
           .count(cartItemEntity.getCount())
@@ -90,5 +94,18 @@ public class OrderService {
     cartService.clearCart(customerKey);
 
     return OrderDto.fromEntity(orderEntity);
+  }
+
+  @Transactional(readOnly = true)
+  public List<OrderDto> getOrders(String customerKey) {
+    List<OrderEntity> orders = orderRepository.findAllByCustomerKey(customerKey);
+
+    if (orders.isEmpty()) {
+      throw new CommonCustomException(ORDER_NOT_EXISTS);
+    }
+
+    return orders.stream()
+        .map(OrderDto::fromEntity)
+        .collect(Collectors.toList());
   }
 }
