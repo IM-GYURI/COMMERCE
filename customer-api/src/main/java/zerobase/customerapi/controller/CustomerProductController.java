@@ -106,11 +106,23 @@ public class CustomerProductController {
     return ResponseEntity.ok(customerProductService.searchByCategorySortedByName(category));
   }
 
+  /**
+   * 카테고리 검색 : 낮은 가격순
+   *
+   * @param category
+   * @return
+   */
   @GetMapping("/search/category/price-asc")
   public ResponseEntity<?> searchByCategorySortedByPriceAsc(@RequestParam Category category) {
     return ResponseEntity.ok(customerProductService.searchByCategorySortedByPriceAsc(category));
   }
 
+  /**
+   * 카테고리 검색 : 높은 가격순
+   *
+   * @param category
+   * @return
+   */
   @GetMapping("/search/category/price-desc")
   public ResponseEntity<?> searchByCategorySortedByPriceDesc(@RequestParam Category category) {
     return ResponseEntity.ok(customerProductService.searchByCategorySortedByPriceDesc(category));
