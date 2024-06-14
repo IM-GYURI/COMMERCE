@@ -52,6 +52,7 @@ public class CustomerService {
     cartService.cartRegister(savedCustomer.getCustomerKey());
 
     log.info("Customer sign up : " + savedCustomer.getCustomerKey());
+
     return CustomerDto.fromEntity(savedCustomer);
   }
 
@@ -66,6 +67,7 @@ public class CustomerService {
 
     log.info("Customer sign in : "
         + ((CustomerEntity) authentication.getPrincipal()).getCustomerKey());
+
     return CustomerDto.fromEntity((CustomerEntity) authentication.getPrincipal());
   }
 
@@ -83,6 +85,7 @@ public class CustomerService {
     customer.updateCustomer(customerEditDto);
 
     log.info("Customer edited own information : " + customer.getCustomerKey());
+
     return CustomerDto.fromEntity(customer);
   }
 
@@ -99,6 +102,7 @@ public class CustomerService {
     customerRepository.deleteByCustomerKey(customerKey);
 
     log.info("Customer deleted : " + customerKey);
+
     return customerKey;
   }
 
@@ -121,6 +125,7 @@ public class CustomerService {
     customer.plusPoint(point);
 
     log.info("Customer charge point " + point + " : " + customerKey);
+    
     return CustomerPointDto.builder()
         .customerKey(customerKey)
         .point(customer.getPoint())

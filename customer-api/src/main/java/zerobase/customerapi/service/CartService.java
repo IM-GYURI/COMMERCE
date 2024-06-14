@@ -41,6 +41,8 @@ public class CartService {
         .customerKey(customerKey)
         .build();
 
+    log.info("Cart is registered : " + customerKey);
+
     cartRepository.save(cartEntity);
   }
 
@@ -95,6 +97,10 @@ public class CartService {
       }
 
       existingItem.updateCount(existingItem.getCount() + count);
+
+      log.info("Cart has this item -> update count : " + existingItem.getProductKey(),
+          "Customer : " + customerKey);
+
     } else {
       if (count > productEntity.getStock()) {
         throw new CommonCustomException(PRODUCT_STOCK_NOT_ENOUGH);
@@ -108,6 +114,9 @@ public class CartService {
           .build();
 
       cartEntity.getItems().add(newItem);
+
+      log.info("Cart doesn't have this item -> add item : " + newItem.getProductKey(),
+          "Customer : " + customerKey);
     }
 
     cartRepository.save(cartEntity);
@@ -146,6 +155,11 @@ public class CartService {
     if (newCount == 0) {
       cartEntity.getItems().remove(cartItemEntity);
       cartRepository.save(cartEntity);
+
+      log.info(
+          "New count is zero -> delete this product from cart : " + cartItemEntity.getProductKey(),
+          "Customer : " + customerKey);
+
       return;
     }
 
@@ -157,6 +171,10 @@ public class CartService {
     }
 
     cartItemEntity.updateCount(newCount);
+
+    log.info("Cart edited quantity to " + newCount + " of this product : "
+        + cartItemEntity.getProductKey(), "Customer : " + customerKey);
+
     cartRepository.save(cartEntity);
   }
 
@@ -172,6 +190,8 @@ public class CartService {
 
     cartEntity.getItems().clear();
     cartRepository.save(cartEntity);
+
+    log.info("Cart is cleared : " + customerKey);
   }
 
   /**
@@ -181,6 +201,8 @@ public class CartService {
    * @return
    */
   public CartEntity getCartByCustomerKey(String customerKey) {
+    log.info("Customer get cart information : " + customerKey);
+
     return cartRepository.findByCustomerKey(customerKey)
         .orElseThrow(() -> new CommonCustomException(CART_NOT_FOUND));
   }
