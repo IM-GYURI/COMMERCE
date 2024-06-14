@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import zerobase.common.entity.ProductEntity;
 import zerobase.common.exception.CommonCustomException;
 import zerobase.common.repository.ProductRepository;
-import zerobase.customerapi.dto.cart.CartDto;
 import zerobase.customerapi.dto.cart.CartItemEditDto;
 import zerobase.customerapi.dto.cart.CartItemRegisterDto;
 import zerobase.customerapi.entity.CartEntity;
@@ -179,8 +178,8 @@ public class CartService {
    * @param customerKey
    * @return
    */
-  public CartDto getCartByCustomerKey(String customerKey) {
-    return CartDto.fromEntity(cartRepository.findByCustomerKey(customerKey)
-        .orElseThrow(() -> new CommonCustomException(CART_NOT_FOUND)));
+  public CartEntity getCartByCustomerKey(String customerKey) {
+    return cartRepository.findByCustomerKey(customerKey)
+        .orElseThrow(() -> new CommonCustomException(CART_NOT_FOUND));
   }
 }
