@@ -18,6 +18,12 @@ public class CartDto {
 
   private List<CartItemDto> items;
 
+  /**
+   * CartEntity -> CartDto 변환
+   *
+   * @param cart
+   * @return
+   */
   public static CartDto fromEntity(CartEntity cart) {
     return CartDto.builder()
         .customerKey(cart.getCustomerKey())
