@@ -24,6 +24,13 @@ public class OrderController {
   private final CustomerService customerService;
   private final CustomerTokenProvider customerTokenProvider;
 
+  /**
+   * 장바구니 전체를 주문 목록으로 변환하여 결제하도록 함
+   *
+   * @param customerKey
+   * @param token
+   * @return
+   */
   @PreAuthorize("hasRole('CUSTOMER')")
   @PostMapping("/{customerKey}")
   public ResponseEntity<?> makeOrder(@PathVariable String customerKey,
