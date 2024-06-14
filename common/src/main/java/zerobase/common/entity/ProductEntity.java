@@ -81,6 +81,10 @@ public class ProductEntity extends BaseEntity implements UserDetails {
     this.description = productEditDto.getDescription();
   }
 
+  public void decreaseStock(Long count) {
+    this.stock -= count;
+  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return null;
