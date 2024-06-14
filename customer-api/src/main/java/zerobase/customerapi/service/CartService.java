@@ -8,6 +8,7 @@ import static zerobase.customerapi.exception.CustomerErrorCode.CART_ITEM_NOT_FOU
 import static zerobase.customerapi.exception.CustomerErrorCode.CART_NOT_FOUND;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zerobase.common.entity.ProductEntity;
@@ -21,6 +22,7 @@ import zerobase.customerapi.repository.CartRepository;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CartService {
 
   private final CartRepository cartRepository;

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zerobase.common.entity.ProductEntity;
@@ -27,6 +28,7 @@ import zerobase.customerapi.repository.OrderRepository;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
 
   private final CartRepository cartRepository;
@@ -66,6 +68,8 @@ public class OrderService {
     customerEntity.minusPoint(totalPrice);
     customerRepository.save(customerEntity);
 
+    log.info("Customer point decreased about " + totalPrice + " : " + customerKey);
+
     OrderEntity orderEntity = OrderEntity.builder()
         .customerKey(customerKey)
         .items(new ArrayList<>())
@@ -80,6 +84,9 @@ public class OrderService {
       productEntity.decreaseStock(cartItemEntity.getCount());
       productRepository.save(productEntity);
 
+      log.info("Product stock decreased about " + cartItemEntity.getCount() + " : "
+          + productEntity.getProductKey());
+
       OrderItemEntity orderItemEntity = OrderItemEntity.builder()
           .order(orderEntity)
           .productKey(cartItemEntity.getProductKey())
@@ -91,7 +98,12 @@ public class OrderService {
     }
 
     orderRepository.save(orderEntity);
+
+    log.info("Customer made order : " + customerKey);
+
     cartService.clearCart(customerKey);
+
+    log.info("Cart is cleared : " + customerKey);
 
     return OrderDto.fromEntity(orderEntity);
   }
@@ -103,6 +115,8 @@ public class OrderService {
     if (orders.isEmpty()) {
       throw new CommonCustomException(ORDER_NOT_EXISTS);
     }
+
+    log.info("Customer get own list of orders : " + customerKey);
 
     return orders.stream()
         .map(OrderDto::fromEntity)

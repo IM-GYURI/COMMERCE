@@ -6,6 +6,7 @@ import static zerobase.customerapi.exception.CustomerErrorCode.CUSTOMER_NOT_FOUN
 import static zerobase.customerapi.exception.CustomerErrorCode.POINT_INVALID;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ import zerobase.customerapi.repository.CustomerRepository;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomerService {
 
   private final CustomerRepository customerRepository;
@@ -49,6 +51,7 @@ public class CustomerService {
 
     cartService.cartRegister(savedCustomer.getCustomerKey());
 
+    log.info("Customer sign up : " + savedCustomer.getCustomerKey());
     return CustomerDto.fromEntity(savedCustomer);
   }
 
@@ -61,6 +64,8 @@ public class CustomerService {
             signInDto.email(), signInDto.password()
         ));
 
+    log.info("Customer sign in : "
+        + ((CustomerEntity) authentication.getPrincipal()).getCustomerKey());
     return CustomerDto.fromEntity((CustomerEntity) authentication.getPrincipal());
   }
 
@@ -77,6 +82,7 @@ public class CustomerService {
 
     customer.updateCustomer(customerEditDto);
 
+    log.info("Customer edited own information : " + customer.getCustomerKey());
     return CustomerDto.fromEntity(customer);
   }
 
@@ -92,6 +98,7 @@ public class CustomerService {
 
     customerRepository.deleteByCustomerKey(customerKey);
 
+    log.info("Customer deleted : " + customerKey);
     return customerKey;
   }
 
@@ -113,6 +120,7 @@ public class CustomerService {
 
     customer.plusPoint(point);
 
+    log.info("Customer charge point " + point + " : " + customerKey);
     return CustomerPointDto.builder()
         .customerKey(customerKey)
         .point(customer.getPoint())

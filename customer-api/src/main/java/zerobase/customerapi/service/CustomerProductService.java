@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,6 +22,7 @@ import zerobase.common.type.Category;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class CustomerProductService {
 
   private final ProductRepository productRepository;
@@ -32,6 +34,7 @@ public class CustomerProductService {
    * @return
    */
   public ProductDto information(String productKey) {
+    log.info("Product detail information : " + productKey);
     return ProductDto.fromEntity(findByProductKeyOrThrow(productKey));
   }
 
@@ -54,6 +57,8 @@ public class CustomerProductService {
   public List<ProductListDto> getAllSortedProductListByName() {
     Pageable limit = PageRequest.of(0, 20, Sort.by("name"));
 
+    log.info("all product list sorted by name asc");
+
     return productRepository.findAll(limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getName))
         .map(productEntity -> new ProductListDto(productEntity.getName(),
@@ -69,6 +74,8 @@ public class CustomerProductService {
   public List<ProductListDto> getAllSortedProductListByPriceAsc() {
     Pageable limit = PageRequest.of(0, 20, Sort.by("price"));
 
+    log.info("all product list sorted by price asc");
+
     return productRepository.findAll(limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getPrice))
         .map(productEntity -> new ProductListDto(productEntity.getName(),
@@ -83,6 +90,8 @@ public class CustomerProductService {
    */
   public List<ProductListDto> getAllSortedProductListByPriceDesc() {
     Pageable limit = PageRequest.of(0, 20, Sort.by("price"));
+
+    log.info("all product list sorted by price desc");
 
     return productRepository.findAll(limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getPrice).reversed())
@@ -100,6 +109,8 @@ public class CustomerProductService {
   public List<ProductListDto> searchByKeyword(String keyword) {
     Pageable limit = PageRequest.of(0, 20);
 
+    log.info("product keyword search sorted by name asc : " + keyword);
+
     return productRepository.findAllByNameContains(keyword, limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getName))
         .map(productEntity -> new ProductListDto(productEntity.getName(),
@@ -115,6 +126,8 @@ public class CustomerProductService {
    */
   public List<ProductListDto> searchByKeywordSortedByPriceAsc(String keyword) {
     Pageable limit = PageRequest.of(0, 20);
+
+    log.info("product keyword search sorted by price asc : " + keyword);
 
     return productRepository.findAllByNameContains(keyword, limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getPrice))
@@ -132,6 +145,8 @@ public class CustomerProductService {
   public List<ProductListDto> searchByKeywordSortedByPriceDesc(String keyword) {
     Pageable limit = PageRequest.of(0, 20);
 
+    log.info("product keyword search sorted by price desc : " + keyword);
+
     return productRepository.findAllByNameContains(keyword, limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getPrice).reversed())
         .map(productEntity -> new ProductListDto(productEntity.getName(),
@@ -147,6 +162,8 @@ public class CustomerProductService {
    */
   public List<ProductListDto> searchByCategorySortedByName(Category category) {
     Pageable limit = PageRequest.of(0, 20);
+
+    log.info("product category search sorted by name asc : " + category);
 
     return productRepository.findAllByCategory(category, limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getName))
@@ -164,6 +181,8 @@ public class CustomerProductService {
   public List<ProductListDto> searchByCategorySortedByPriceAsc(Category category) {
     Pageable limit = PageRequest.of(0, 20);
 
+    log.info("product category search sorted by price asc : " + category);
+
     return productRepository.findAllByCategory(category, limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getPrice))
         .map(productEntity -> new ProductListDto(productEntity.getName(),
@@ -179,6 +198,8 @@ public class CustomerProductService {
    */
   public List<ProductListDto> searchByCategorySortedByPriceDesc(Category category) {
     Pageable limit = PageRequest.of(0, 20);
+
+    log.info("product category search sorted by price desc : " + category);
 
     return productRepository.findAllByCategory(category, limit).stream()
         .sorted(Comparator.comparing(ProductEntity::getPrice).reversed())
