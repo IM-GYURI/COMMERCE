@@ -18,7 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import zerobase.sellerapi.dto.seller.SellerDto;
+import zerobase.sellerapi.dto.SellerDto;
 
 /**
  * JWT 발행
