@@ -1,7 +1,5 @@
 package zerobase.customerapi.controller;
 
-import static zerobase.customerapi.exception.CustomerErrorCode.CART_NOT_FOUND;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,13 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import zerobase.common.exception.CommonCustomException;
+import zerobase.customerapi.dto.cart.CartDto;
 import zerobase.customerapi.dto.cart.CartItemEditDto;
 import zerobase.customerapi.dto.cart.CartItemRegisterDto;
 import zerobase.customerapi.dto.cart.CartWithTotalDto;
 import zerobase.customerapi.dto.customer.CustomerDto;
 import zerobase.customerapi.entity.CartEntity;
-import zerobase.customerapi.repository.CartRepository;
 import zerobase.customerapi.security.CustomerTokenProvider;
 import zerobase.customerapi.service.CartService;
 import zerobase.customerapi.service.CustomerService;
@@ -36,7 +33,6 @@ public class CartController {
 
   private final CustomerService customerService;
   private final CartService cartService;
-  private final CartRepository cartRepository;
   private final CustomerTokenProvider customerTokenProvider;
 
   /**
@@ -60,8 +56,7 @@ public class CartController {
     CustomerDto customerDto = customerService.validateAuthorizationAndGetCustomer(customerKey,
         email);
 
-    CartEntity cartEntity = cartRepository.findByCustomerKey(customerKey)
-        .orElseThrow(() -> new CommonCustomException(CART_NOT_FOUND));
+    CartEntity cartEntity = cartService.getCartByCustomerKey(customerKey);
 
     return ResponseEntity.ok(CartWithTotalDto.fromEntity(cartEntity));
   }
@@ -91,7 +86,7 @@ public class CartController {
 
     cartService.addProductToCart(customerKey, cartItemRegisterDto);
 
-    return ResponseEntity.ok(cartService.getCartByCustomerKey(customerKey));
+    return ResponseEntity.ok(CartDto.fromEntity(cartService.getCartByCustomerKey(customerKey)));
   }
 
   /**
@@ -118,7 +113,7 @@ public class CartController {
 
     cartService.editCartProductQuantity(customerKey, cartItemEditDto);
 
-    return ResponseEntity.ok(cartService.getCartByCustomerKey(customerKey));
+    return ResponseEntity.ok(CartDto.fromEntity(cartService.getCartByCustomerKey(customerKey)));
   }
 
   /**
@@ -144,6 +139,6 @@ public class CartController {
 
     cartService.clearCart(customerKey);
 
-    return ResponseEntity.ok(cartService.getCartByCustomerKey(customerKey));
+    return ResponseEntity.ok(CartDto.fromEntity(cartService.getCartByCustomerKey(customerKey)));
   }
 }
