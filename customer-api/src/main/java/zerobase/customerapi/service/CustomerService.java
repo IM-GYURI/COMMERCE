@@ -3,6 +3,7 @@ package zerobase.customerapi.service;
 import static zerobase.common.exception.CommonErrorCode.INVALID_REQUEST;
 import static zerobase.customerapi.exception.CustomerErrorCode.CUSTOMER_ALREADY_EXISTS;
 import static zerobase.customerapi.exception.CustomerErrorCode.CUSTOMER_NOT_FOUND;
+import static zerobase.customerapi.exception.CustomerErrorCode.POINT_INVALID;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -105,6 +106,10 @@ public class CustomerService {
   public CustomerPointDto chargePoint(String customerKey, Long point) {
     CustomerEntity customer = customerRepository.findByCustomerKey(customerKey)
         .orElseThrow(() -> new CommonCustomException(CUSTOMER_NOT_FOUND));
+
+    if (point <= 0) {
+      throw new CommonCustomException(POINT_INVALID);
+    }
 
     customer.plusPoint(point);
 
