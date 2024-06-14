@@ -16,6 +16,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 장바구니 엔티티 : 아이디, 고객 키, CartItemEntity 리스트
+ */
 @Getter
 @NoArgsConstructor
 @Table(indexes = {@Index(columnList = "customer_key")})
