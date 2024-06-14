@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -48,5 +49,22 @@ public class OrderController {
     OrderDto orderDto = orderService.makeOrder(customerKey);
 
     return ResponseEntity.ok(orderDto);
+  }
+
+  @PreAuthorize("hasRole('CUSTOMER')")
+  @GetMapping("/{customerKey}")
+  public ResponseEntity<?> orderListInformation(@PathVariable String customerKey,
+      @RequestHeader("Authorization") String token) {
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+    }
+
+    Authentication authentication = customerTokenProvider.getAuthentication(token);
+    String email = authentication.getName();
+
+    CustomerDto customerDto = customerService.validateAuthorizationAndGetCustomer(customerKey,
+        email);
+
+    return ResponseEntity.ok(orderService.getOrders(customerKey));
   }
 }
