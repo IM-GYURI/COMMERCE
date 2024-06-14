@@ -19,6 +19,12 @@ public class OrderItemDto {
   private Long price;
   private Long count;
 
+  /**
+   * OrderItemEntity -> OrderItemDto 변환
+   *
+   * @param orderItemEntity
+   * @return
+   */
   public static OrderItemDto fromEntity(OrderItemEntity orderItemEntity) {
     return OrderItemDto.builder()
         .productKey(orderItemEntity.getProductKey())
