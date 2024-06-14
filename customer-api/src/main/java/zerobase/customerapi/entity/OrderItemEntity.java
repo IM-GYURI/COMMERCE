@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import zerobase.common.entity.BaseEntity;
 
 /**
  * 주문 아이템 엔티티 : 아이디, 주문 아이디(FK), 상품 키, 가격, 수량
@@ -22,7 +23,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity(name = "OrderItem")
-public class OrderItemEntity {
+public class OrderItemEntity extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

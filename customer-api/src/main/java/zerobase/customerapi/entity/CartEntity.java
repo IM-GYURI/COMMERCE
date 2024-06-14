@@ -15,6 +15,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import zerobase.common.entity.BaseEntity;
 
 /**
  * 장바구니 엔티티 : 아이디, 고객 키, CartItemEntity 리스트
@@ -23,7 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(indexes = {@Index(columnList = "customer_key")})
 @Entity(name = "Cart")
-public class CartEntity {
+public class CartEntity extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package zerobase.customerapi.dto.cart;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,8 @@ public class CartDto {
   private String customerKey;
 
   private List<CartItemDto> items;
+  private LocalDateTime createdAt;
+  private LocalDateTime modifiedAt;
 
   /**
    * CartEntity -> CartDto 변환
@@ -30,6 +33,8 @@ public class CartDto {
         .items(cart.getItems().stream()
             .map(CartItemDto::fromEntity)
             .collect(Collectors.toList()))
+        .createdAt(cart.getCreatedAt())
+        .modifiedAt(cart.getModifiedAt())
         .build();
   }
 }

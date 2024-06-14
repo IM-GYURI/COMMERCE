@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import zerobase.common.entity.BaseEntity;
 
 /**
  * 장바구니 아이템 엔티티 : 아이디, 장바구니 아이디(FK), 상품 키, 가격, 수량
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(indexes = {@Index(columnList = "cart_id")})
 @Entity(name = "CartItem")
-public class CartItemEntity {
+public class CartItemEntity extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
