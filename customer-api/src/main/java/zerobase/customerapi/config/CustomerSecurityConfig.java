@@ -38,6 +38,11 @@ public class CustomerSecurityConfig {
         .authorizeHttpRequests((request) -> request
             .requestMatchers(
                 "/",
+                "/error",
+                "/swagger-ui",
+                "/swagger-ui/**",
+                "/swagger-resources/**",
+                "/v3/api-docs/**",
                 "/customer/signup",
                 "/customer/signin",
                 "/product/**"
