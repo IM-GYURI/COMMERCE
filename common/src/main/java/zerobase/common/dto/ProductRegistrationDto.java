@@ -17,7 +17,7 @@ import zerobase.common.util.ValidEnum;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrationDto {
+public class ProductRegistrationDto {
 
   @NotBlank
   private String sellerKey;
@@ -36,7 +36,7 @@ public class RegistrationDto {
 
   @NotBlank
   private String description;
-
+  
   public ProductEntity toEntity(String productKey) {
     return ProductEntity.builder()
         .productKey(productKey)
