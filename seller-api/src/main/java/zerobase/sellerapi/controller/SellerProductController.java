@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import zerobase.common.dto.ProductDto;
 import zerobase.common.dto.ProductEditDto;
-import zerobase.common.dto.RegistrationDto;
+import zerobase.common.dto.ProductRegistrationDto;
 import zerobase.sellerapi.service.SellerProductService;
 
 @RequestMapping("/product")
@@ -27,13 +27,14 @@ public class SellerProductController {
   /**
    * 상품 등록 : SELLER만 가능
    *
-   * @param registrationDto
+   * @param productRegistrationDto
    * @return
    */
   @PreAuthorize("hasRole('SELLER')")
   @PostMapping("/registration")
-  public ResponseEntity<?> registration(@RequestBody @Valid RegistrationDto registrationDto) {
-    ProductDto productDto = sellerProductService.registration(registrationDto);
+  public ResponseEntity<?> registration(
+      @RequestBody @Valid ProductRegistrationDto productRegistrationDto) {
+    ProductDto productDto = sellerProductService.registration(productRegistrationDto);
 
     return ResponseEntity.ok(productDto);
   }

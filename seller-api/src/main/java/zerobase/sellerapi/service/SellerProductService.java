@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zerobase.common.dto.ProductDto;
 import zerobase.common.dto.ProductEditDto;
-import zerobase.common.dto.RegistrationDto;
+import zerobase.common.dto.ProductRegistrationDto;
 import zerobase.common.entity.ProductEntity;
 import zerobase.common.exception.CommonCustomException;
 import zerobase.common.repository.ProductRepository;
@@ -30,15 +30,15 @@ public class SellerProductService {
   /**
    * 상품 등록 : 판매자 키를 통해 판매자 정보를 찾은 후 상품 등록
    *
-   * @param registrationDto
+   * @param productRegistrationDto
    * @return
    */
   @Transactional
-  public ProductDto registration(RegistrationDto registrationDto) {
+  public ProductDto registration(ProductRegistrationDto productRegistrationDto) {
     SellerEntity seller = sellerService.findBySellerKeyOrThrow(
-        registrationDto.getSellerKey());
+        productRegistrationDto.getSellerKey());
 
-    ProductEntity product = registrationDto.toEntity(KeyGenerator.generateKey());
+    ProductEntity product = productRegistrationDto.toEntity(KeyGenerator.generateKey());
     product.setSeller(seller.getSellerKey());
     productRepository.save(product);
 
