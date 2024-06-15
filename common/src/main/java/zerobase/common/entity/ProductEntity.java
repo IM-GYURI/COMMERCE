@@ -81,6 +81,11 @@ public class ProductEntity extends BaseEntity implements UserDetails {
     this.description = productEditDto.getDescription();
   }
 
+  /**
+   * 상품 재고 감소
+   *
+   * @param count
+   */
   public void decreaseStock(Long count) {
     this.stock -= count;
   }
