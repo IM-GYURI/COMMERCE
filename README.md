@@ -19,6 +19,7 @@
 - Spring Validation
 - Spring Data JPA
 - MariaDB
+- H2 (Test DB)
 - JUnit
 - Mockito
 
