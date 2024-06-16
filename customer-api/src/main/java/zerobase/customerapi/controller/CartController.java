@@ -18,7 +18,6 @@ import zerobase.customerapi.dto.cart.CartItemEditDto;
 import zerobase.customerapi.dto.cart.CartItemRegisterDto;
 import zerobase.customerapi.dto.cart.CartWithTotalDto;
 import zerobase.customerapi.dto.customer.CustomerDto;
-import zerobase.customerapi.entity.CartEntity;
 import zerobase.customerapi.security.CustomerTokenProvider;
 import zerobase.customerapi.service.CartService;
 import zerobase.customerapi.service.CustomerService;
@@ -56,9 +55,8 @@ public class CartController {
     CustomerDto customerDto = customerService.validateAuthorizationAndGetCustomer(customerKey,
         email);
 
-    CartEntity cartEntity = cartService.getCartByCustomerKey(customerKey);
-
-    return ResponseEntity.ok(CartWithTotalDto.fromEntity(cartEntity));
+    return ResponseEntity.ok(
+        CartWithTotalDto.fromEntity(cartService.getCartByCustomerKey(customerKey)));
   }
 
   /**

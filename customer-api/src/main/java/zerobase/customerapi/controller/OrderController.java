@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import zerobase.customerapi.dto.customer.CustomerDto;
-import zerobase.customerapi.dto.order.OrderDto;
 import zerobase.customerapi.security.CustomerTokenProvider;
 import zerobase.customerapi.service.CustomerService;
 import zerobase.customerapi.service.OrderService;
@@ -46,9 +45,7 @@ public class OrderController {
     CustomerDto customerDto = customerService.validateAuthorizationAndGetCustomer(customerKey,
         email);
 
-    OrderDto orderDto = orderService.makeOrder(customerKey);
-
-    return ResponseEntity.ok(orderDto);
+    return ResponseEntity.ok(orderService.makeOrder(customerKey));
   }
 
   /**

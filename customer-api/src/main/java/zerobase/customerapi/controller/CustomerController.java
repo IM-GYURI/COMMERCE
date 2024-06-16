@@ -74,10 +74,8 @@ public class CustomerController {
     Authentication authentication = customerTokenProvider.getAuthentication(token);
     String email = authentication.getName();
 
-    CustomerDto customerDto = customerService.validateAuthorizationAndGetCustomer(customerKey,
-        email);
-
-    return ResponseEntity.ok(customerDto);
+    return ResponseEntity.ok(customerService.validateAuthorizationAndGetCustomer(customerKey,
+        email));
   }
 
   /**
@@ -102,9 +100,7 @@ public class CustomerController {
     CustomerDto customerDto = customerService.validateAuthorizationAndGetCustomer(customerKey,
         email);
 
-    customerDto = customerService.edit(customerEditDto);
-
-    return ResponseEntity.ok(customerDto);
+    return ResponseEntity.ok(customerService.edit(customerEditDto));
   }
 
   /**
@@ -127,10 +123,8 @@ public class CustomerController {
 
     CustomerDto customerDto = customerService.validateAuthorizationAndGetCustomer(customerKey,
         email);
-
-    customerKey = customerService.delete(customerKey);
-
-    return ResponseEntity.ok("delete " + customerKey);
+    
+    return ResponseEntity.ok("delete " + customerService.delete(customerKey));
   }
 
   /**

@@ -34,9 +34,7 @@ public class SellerProductController {
   @PostMapping("/registration")
   public ResponseEntity<?> registration(
       @RequestBody @Valid ProductRegistrationDto productRegistrationDto) {
-    ProductDto productDto = sellerProductService.registration(productRegistrationDto);
-
-    return ResponseEntity.ok(productDto);
+    return ResponseEntity.ok(sellerProductService.registration(productRegistrationDto));
   }
 
   /**
@@ -69,9 +67,7 @@ public class SellerProductController {
       @RequestHeader("Authorization") String token) {
     ProductDto productDto = sellerProductService.validateAuthorizationAndGetSeller(productKey,
         token);
-
-    productKey = sellerProductService.delete(productKey, token);
-
-    return ResponseEntity.ok("delete " + productKey);
+    
+    return ResponseEntity.ok("delete " + sellerProductService.delete(productKey, token));
   }
 }

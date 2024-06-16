@@ -1,6 +1,5 @@
 package zerobase.customerapi.controller;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import zerobase.common.dto.ProductListDto;
 import zerobase.common.type.Category;
 import zerobase.customerapi.service.CustomerProductService;
 
@@ -37,9 +35,7 @@ public class CustomerProductController {
    */
   @GetMapping("/name")
   public ResponseEntity<?> sortedByName() {
-    List<ProductListDto> productList = customerProductService.getAllSortedProductListByName();
-
-    return ResponseEntity.ok(productList);
+    return ResponseEntity.ok(customerProductService.getAllSortedProductListByName());
   }
 
   /**
@@ -47,9 +43,7 @@ public class CustomerProductController {
    */
   @GetMapping("/price-asc")
   public ResponseEntity<?> sortedByPriceAsc() {
-    List<ProductListDto> productList = customerProductService.getAllSortedProductListByPriceAsc();
-
-    return ResponseEntity.ok(productList);
+    return ResponseEntity.ok(customerProductService.getAllSortedProductListByPriceAsc());
   }
 
   /**
@@ -57,9 +51,7 @@ public class CustomerProductController {
    */
   @GetMapping("/price-desc")
   public ResponseEntity<?> sortedByPriceDesc() {
-    List<ProductListDto> productList = customerProductService.getAllSortedProductListByPriceDesc();
-
-    return ResponseEntity.ok(productList);
+    return ResponseEntity.ok(customerProductService.getAllSortedProductListByPriceDesc());
   }
 
   /**

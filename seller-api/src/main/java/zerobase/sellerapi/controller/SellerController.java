@@ -70,9 +70,7 @@ public class SellerController {
     Authentication authentication = sellerTokenProvider.getAuthentication(token);
     String email = authentication.getName();
 
-    SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, email);
-
-    return ResponseEntity.ok(sellerDto);
+    return ResponseEntity.ok(sellerService.validateAuthorizationAndGetSeller(sellerKey, email));
   }
 
   /**
@@ -97,9 +95,7 @@ public class SellerController {
 
     SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, email);
 
-    sellerDto = sellerService.edit(sellerEditDto);
-
-    return ResponseEntity.ok(sellerDto);
+    return ResponseEntity.ok(sellerService.edit(sellerEditDto));
   }
 
   /**
