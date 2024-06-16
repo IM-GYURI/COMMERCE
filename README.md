@@ -8,7 +8,7 @@
 
 # ERD
 
-![ERD](https://github.com/IM-GYURI/COMMERCE/assets/80020777/16633bb7-021a-4c31-883b-a005214b0626)
+![ERD](https://github.com/IM-GYURI/COMMERCE/assets/80020777/dce9f1b2-c4a5-4e67-830c-ec816c4d7b08)
 
 # Tech Stack
 
@@ -160,7 +160,5 @@
 
 - [X] 본인만 결제 가능하도록 한다. (Token 검증)
 - [X] 장바구니 상품 전체를 주문 목록으로 보고, 결제하도록 한다.
-    - 선택 결제는 추후 추가
-      <br>
 
 #### [Go To Trouble Shooting](./docs/TroubleShooting.md)
