@@ -41,6 +41,36 @@ url: jdbc:mariadb://localhost:3306/commerce?characterEncoding=UTF-8
 
 2. 해당 DB의 스키마를 UTF-8로 수정
 
+### DB : Page 문제
+
+의도 : 전체를 조건에 따라 정렬한 후 20개씩 나누어 보여줄 것  
+-> 실행 시 DB에 저장된 순으로 **20개를 가져온 후 정렬**하여 보여줌
+
+- QueryDsl 사용을 추천받아 build.gradle을 설정하였지만 꼭 사용하지 않고도 해결할 수 있다는 것을 알게 됨
+
+⭐ 해결
+
+- 아래와 같이 PageRequest에 `Sort.by(Sort.Direction.ASC, "name")`를 추가함
+
+```java
+  /**
+ * 상품 전체 조회 : 가나다순
+ *
+ * @return
+ */
+public List<ProductListDto> getAllSortedProductListByName() {
+  Pageable limit = PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, "name"));
+
+  log.info("all product list sorted by name asc");
+
+  return productRepository.findAll(limit).stream()
+      .sorted(Comparator.comparing(ProductEntity::getName))
+      .map(productEntity -> new ProductListDto(productEntity.getName(),
+          productEntity.getCategory(), productEntity.getPrice(), productEntity.getStock()))
+      .collect(Collectors.toList());
+}
+```
+
 ### Java file outside of source root
 
 IntelliJ에서 각 모듈 내의 Application이 실행되지 않는 오류 발생
