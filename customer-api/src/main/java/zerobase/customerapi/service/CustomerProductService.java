@@ -1,5 +1,7 @@
 package zerobase.customerapi.service;
 
+import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 import static zerobase.common.exception.CommonErrorCode.PRODUCT_NOT_FOUND;
 
 import java.util.Comparator;
@@ -55,7 +57,7 @@ public class CustomerProductService {
    * @return
    */
   public List<ProductListDto> getAllSortedProductListByName() {
-    Pageable limit = PageRequest.of(0, 20, Sort.by("name"));
+    Pageable limit = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
     log.info("all product list sorted by name asc");
 
@@ -72,7 +74,7 @@ public class CustomerProductService {
    * @return
    */
   public List<ProductListDto> getAllSortedProductListByPriceAsc() {
-    Pageable limit = PageRequest.of(0, 20, Sort.by("price"));
+    Pageable limit = PageRequest.of(0, 20, Sort.by(ASC, "price"));
 
     log.info("all product list sorted by price asc");
 
@@ -89,7 +91,7 @@ public class CustomerProductService {
    * @return
    */
   public List<ProductListDto> getAllSortedProductListByPriceDesc() {
-    Pageable limit = PageRequest.of(0, 20, Sort.by("price"));
+    Pageable limit = PageRequest.of(0, 20, Sort.by(DESC, "price"));
 
     log.info("all product list sorted by price desc");
 
@@ -107,7 +109,7 @@ public class CustomerProductService {
    * @return
    */
   public List<ProductListDto> searchByKeyword(String keyword) {
-    Pageable limit = PageRequest.of(0, 20);
+    Pageable limit = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
     log.info("product keyword search sorted by name asc : " + keyword);
 
@@ -125,7 +127,7 @@ public class CustomerProductService {
    * @return
    */
   public List<ProductListDto> searchByKeywordSortedByPriceAsc(String keyword) {
-    Pageable limit = PageRequest.of(0, 20);
+    Pageable limit = PageRequest.of(0, 20, Sort.by(ASC, "price"));
 
     log.info("product keyword search sorted by price asc : " + keyword);
 
@@ -143,7 +145,7 @@ public class CustomerProductService {
    * @return
    */
   public List<ProductListDto> searchByKeywordSortedByPriceDesc(String keyword) {
-    Pageable limit = PageRequest.of(0, 20);
+    Pageable limit = PageRequest.of(0, 20, Sort.by(DESC, "price"));
 
     log.info("product keyword search sorted by price desc : " + keyword);
 
@@ -161,7 +163,7 @@ public class CustomerProductService {
    * @return
    */
   public List<ProductListDto> searchByCategorySortedByName(Category category) {
-    Pageable limit = PageRequest.of(0, 20);
+    Pageable limit = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
     log.info("product category search sorted by name asc : " + category);
 
@@ -179,7 +181,7 @@ public class CustomerProductService {
    * @return
    */
   public List<ProductListDto> searchByCategorySortedByPriceAsc(Category category) {
-    Pageable limit = PageRequest.of(0, 20);
+    Pageable limit = PageRequest.of(0, 20, Sort.by(ASC, "price"));
 
     log.info("product category search sorted by price asc : " + category);
 
@@ -197,7 +199,7 @@ public class CustomerProductService {
    * @return
    */
   public List<ProductListDto> searchByCategorySortedByPriceDesc(Category category) {
-    Pageable limit = PageRequest.of(0, 20);
+    Pageable limit = PageRequest.of(0, 20, Sort.by(DESC, "price"));
 
     log.info("product category search sorted by price desc : " + category);
 
