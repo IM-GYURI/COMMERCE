@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 장바구니를 등록하기 위한 Dto
+ */
 @Getter
 @Builder
 @NoArgsConstructor

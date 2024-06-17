@@ -16,3 +16,6 @@ spring:
 
   jwt:
     secret: emVyb2Jhc2VfY29tbWVyY2VfbWlzc2lvbl9pbWd5dXJpXzA1MTdfc2VjcmV0X2tleQ==
+
+logging:
+  config: classpath:logback-spring.xml

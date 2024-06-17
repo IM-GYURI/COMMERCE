@@ -21,7 +21,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import zerobase.common.entity.BaseEntity;
 import zerobase.common.type.Role;
-import zerobase.sellerapi.dto.seller.SellerEditDto;
+import zerobase.sellerapi.dto.SellerEditDto;
 
 /**
  * 판매자 엔티티 : 아이디, 판매자 키, 이메일, 비밀번호, 이름, 전화번호, 주소, 역할

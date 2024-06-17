@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 고객 정보 수정을 위한 Dto
+ */
 @Getter
 @Builder
 @NoArgsConstructor

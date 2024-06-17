@@ -1,5 +1,8 @@
 package zerobase.common.entity;
 
+import static zerobase.common.exception.CommonErrorCode.PRODUCT_STOCK_NOT_ENOUGH;
+import static zerobase.common.exception.CommonErrorCode.STOCK_NOT_MINUS;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +18,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import zerobase.common.dto.product.ProductEditDto;
+import zerobase.common.dto.ProductEditDto;
+import zerobase.common.exception.CommonCustomException;
 import zerobase.common.type.Category;
 
 /**
@@ -79,6 +83,23 @@ public class ProductEntity extends BaseEntity implements UserDetails {
     this.price = productEditDto.getPrice();
     this.stock = productEditDto.getStock();
     this.description = productEditDto.getDescription();
+  }
+
+  /**
+   * 상품 재고 감소
+   *
+   * @param count
+   */
+  public void decreaseStock(Long count) {
+    if (count < 0) {
+      throw new CommonCustomException(STOCK_NOT_MINUS);
+    }
+
+    if (this.stock < count) {
+      throw new CommonCustomException(PRODUCT_STOCK_NOT_ENOUGH);
+    }
+
+    this.stock -= count;
   }
 
   @Override

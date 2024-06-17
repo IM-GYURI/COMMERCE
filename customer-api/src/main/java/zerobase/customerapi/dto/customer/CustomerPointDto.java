@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 포인트 관련 Dto
+ */
 @Getter
 @Builder
 @NoArgsConstructor

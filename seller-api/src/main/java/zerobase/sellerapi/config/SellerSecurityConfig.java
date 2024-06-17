@@ -38,6 +38,11 @@ public class SellerSecurityConfig {
             c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests((request) -> request.requestMatchers(
                     "/",
+                    "/error",
+                    "/swagger-ui",
+                    "/swagger-ui/**",
+                    "/swagger-resources/**",
+                    "/v3/api-docs/**",
                     "/seller/signup",
                     "/seller/signin"
                 ).permitAll()

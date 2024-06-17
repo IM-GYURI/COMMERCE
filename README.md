@@ -8,7 +8,7 @@
 
 # ERD
 
-![ERD](https://github.com/IM-GYURI/COMMERCE/assets/80020777/16633bb7-021a-4c31-883b-a005214b0626)
+![ERD](https://github.com/IM-GYURI/COMMERCE/assets/80020777/dce9f1b2-c4a5-4e67-830c-ec816c4d7b08)
 
 # Tech Stack
 
@@ -19,6 +19,7 @@
 - Spring Validation
 - Spring Data JPA
 - MariaDB
+- H2 (Test DB)
 - JUnit
 - Mockito
 
@@ -143,13 +144,13 @@
 
 ### 장바구니 수정
 
-- [ ] 본인의 장바구니만 수정 가능하도록 한다. (Token 검증)
-- [ ] 수정 시 해당 상품의 재고를 넘어서지 않도록 한다.
+- [X] 본인의 장바구니만 수정 가능하도록 한다. (Token 검증)
+- [X] 수정 시 해당 상품의 재고를 넘어서지 않도록 한다.
 
 ### 장바구니 비우기
 
-- [ ] 본인의 장바구니만 비우기가 가능하도록 한다. (Token 검증)
-- [ ] 장바구니 전체 비우기 또는 특정 상품 비우기가 가능하도록 한다.
+- [X] 본인의 장바구니만 비우기가 가능하도록 한다. (Token 검증)
+- [X] 장바구니 전체 비우기 또는 특정 상품 비우기가 가능하도록 한다.
 
 ### 포인트 충전
 
@@ -157,9 +158,7 @@
 
 ### 포인트 결제
 
-- [ ] 본인만 결제 가능하도록 한다. (Token 검증)
-- [ ] 장바구니 상품 전체를 주문 목록으로 보고, 결제하도록 한다.
-    - 선택 결제는 추후 추가
-      <br>
+- [X] 본인만 결제 가능하도록 한다. (Token 검증)
+- [X] 장바구니 상품 전체를 주문 목록으로 보고, 결제하도록 한다.
 
 #### [Go To Trouble Shooting](./docs/TroubleShooting.md)

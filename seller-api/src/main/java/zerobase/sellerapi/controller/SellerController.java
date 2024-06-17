@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import zerobase.sellerapi.dto.seller.SellerDto;
-import zerobase.sellerapi.dto.seller.SellerEditDto;
-import zerobase.sellerapi.dto.seller.SellerSignInDto;
-import zerobase.sellerapi.dto.seller.SellerSignUpDto;
+import zerobase.sellerapi.dto.SellerDto;
+import zerobase.sellerapi.dto.SellerEditDto;
+import zerobase.sellerapi.dto.SellerSignInDto;
+import zerobase.sellerapi.dto.SellerSignUpDto;
 import zerobase.sellerapi.security.SellerTokenProvider;
 import zerobase.sellerapi.service.SellerService;
 
@@ -70,9 +70,7 @@ public class SellerController {
     Authentication authentication = sellerTokenProvider.getAuthentication(token);
     String email = authentication.getName();
 
-    SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, email);
-
-    return ResponseEntity.ok(sellerDto);
+    return ResponseEntity.ok(sellerService.validateAuthorizationAndGetSeller(sellerKey, email));
   }
 
   /**
@@ -97,9 +95,7 @@ public class SellerController {
 
     SellerDto sellerDto = sellerService.validateAuthorizationAndGetSeller(sellerKey, email);
 
-    sellerDto = sellerService.edit(sellerEditDto);
-
-    return ResponseEntity.ok(sellerDto);
+    return ResponseEntity.ok(sellerService.edit(sellerEditDto));
   }
 
   /**

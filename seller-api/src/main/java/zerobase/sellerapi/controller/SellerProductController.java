@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import zerobase.common.dto.product.ProductDto;
-import zerobase.common.dto.product.ProductEditDto;
-import zerobase.common.dto.product.RegistrationDto;
+import zerobase.common.dto.ProductDto;
+import zerobase.common.dto.ProductEditDto;
+import zerobase.common.dto.ProductRegistrationDto;
 import zerobase.sellerapi.service.SellerProductService;
 
 @RequestMapping("/product")
@@ -27,16 +27,14 @@ public class SellerProductController {
   /**
    * 상품 등록 : SELLER만 가능
    *
-   * @param registrationDto
+   * @param productRegistrationDto
    * @return
    */
-
   @PreAuthorize("hasRole('SELLER')")
   @PostMapping("/registration")
-  public ResponseEntity<?> registration(@RequestBody @Valid RegistrationDto registrationDto) {
-    ProductDto productDto = sellerProductService.registration(registrationDto);
-
-    return ResponseEntity.ok(productDto);
+  public ResponseEntity<?> registration(
+      @RequestBody @Valid ProductRegistrationDto productRegistrationDto) {
+    return ResponseEntity.ok(sellerProductService.registration(productRegistrationDto));
   }
 
   /**
@@ -56,15 +54,20 @@ public class SellerProductController {
     return ResponseEntity.ok(sellerProductService.edit(productEditDto));
   }
 
+  /**
+   * 상품 삭제 : SELLER 본인만 가능
+   *
+   * @param productKey
+   * @param token
+   * @return
+   */
   @PreAuthorize("hasRole('SELLER')")
   @DeleteMapping("/{productKey}")
   public ResponseEntity<?> deleteProduct(@PathVariable String productKey,
       @RequestHeader("Authorization") String token) {
     ProductDto productDto = sellerProductService.validateAuthorizationAndGetSeller(productKey,
         token);
-
-    productKey = sellerProductService.delete(productKey, token);
-
-    return ResponseEntity.ok("delete " + productKey);
+    
+    return ResponseEntity.ok("delete " + sellerProductService.delete(productKey, token));
   }
 }

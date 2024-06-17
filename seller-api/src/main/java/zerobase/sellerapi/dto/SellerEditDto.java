@@ -1,19 +1,21 @@
-package zerobase.common.dto.product;
+package zerobase.sellerapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import zerobase.common.type.Category;
 
+/**
+ * 판매자 정보 수정을 위한 Dto
+ */
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductListDto {
+public class SellerEditDto {
 
+  private String sellerKey;
   private String name;
-  private Category category;
-  private Long price;
-  private Long stock;
+  private String phone;
+  private String address;
 }

@@ -80,6 +80,31 @@ public class CustomerEntity extends BaseEntity implements UserDetails {
     this.role = CUSTOMER;
   }
 
+  /**
+   * 고객 정보 수정 기능
+   *
+   * @param customerEditDto
+   */
+  public void updateCustomer(CustomerEditDto customerEditDto) {
+    this.name = customerEditDto.getName();
+    this.phone = customerEditDto.getPhone();
+    this.address = customerEditDto.getAddress();
+    this.birth = customerEditDto.getBirth();
+  }
+
+  /**
+   * 포인트 충전 기능
+   *
+   * @param point
+   */
+  public void plusPoint(Long point) {
+    this.point += point;
+  }
+
+  public void minusPoint(Long point) {
+    this.point -= point;
+  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return Collections.singletonList(new SimpleGrantedAuthority(role.getKey()));
@@ -115,14 +140,4 @@ public class CustomerEntity extends BaseEntity implements UserDetails {
     return true;
   }
 
-  public void updateCustomer(CustomerEditDto customerEditDto) {
-    this.name = customerEditDto.getName();
-    this.phone = customerEditDto.getPhone();
-    this.address = customerEditDto.getAddress();
-    this.birth = customerEditDto.getBirth();
-  }
-
-  public void updatePoint(Long point) {
-    this.point += point;
-  }
 }

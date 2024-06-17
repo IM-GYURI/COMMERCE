@@ -1,4 +1,4 @@
-package zerobase.sellerapi.dto.seller;
+package zerobase.sellerapi.dto;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
